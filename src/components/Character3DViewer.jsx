@@ -749,12 +749,12 @@ export default function Character3DViewer() {
   return (
     <div className="flex flex-col h-full bg-slate-900/5 rounded-2xl border-2 border-slate-800 overflow-hidden shadow-inner select-none">
       {/* Scene Tabs Bar */}
-      <div className="bg-slate-900 text-white p-2 flex items-center gap-1.5 overflow-x-auto cartoon-scroll">
+      <div className="bg-slate-900 text-white p-1.5 sm:p-2 flex items-center gap-1 sm:gap-1.5 overflow-x-auto cartoon-scroll shrink-0">
         {SCENES_DATA.map((sc, idx) => (
           <button
             key={sc.id}
             onClick={() => handleSelectScene(idx)}
-            className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all whitespace-nowrap flex items-center gap-1.5 border ${
+            className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl text-[10px] sm:text-xs font-black transition-all whitespace-nowrap flex items-center gap-1 sm:gap-1.5 border shrink-0 ${
               currentSceneIdx === idx
                 ? `${sc.badgeColor} text-white border-white shadow-md scale-105`
                 : 'bg-slate-800/80 text-slate-300 border-slate-700 hover:bg-slate-700'
@@ -766,55 +766,55 @@ export default function Character3DViewer() {
       </div>
 
       {/* 3D Canvas with High Definition Tone Mapping */}
-      <div className="relative flex-1 min-h-[290px] w-full bg-slate-100 overflow-hidden group">
+      <div className="relative flex-1 min-h-[200px] sm:min-h-[260px] md:min-h-[290px] w-full bg-slate-100 overflow-hidden group">
         <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
 
         {/* Orbit Hint */}
-        <div className="absolute top-2.5 left-2.5 bg-slate-950/80 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1.5 pointer-events-none shadow">
-          <Eye size={12} className="text-sky-400" />
-          <span>Putar 3D: geser mouse / layar</span>
+        <div className="absolute top-2 left-2 bg-slate-950/80 backdrop-blur-md text-white text-[9px] sm:text-[10px] font-bold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full flex items-center gap-1 pointer-events-none shadow">
+          <Eye size={11} className="text-sky-400" />
+          <span>Putar 3D: geser layar</span>
         </div>
 
         {/* Scene Title Badge */}
-        <div className="absolute top-2.5 right-2.5 bg-white/95 backdrop-blur-md px-3 py-1 rounded-full shadow border border-slate-300 flex items-center gap-1.5">
-          <span className={`w-2 h-2 rounded-full ${curScene.badgeColor} animate-ping`} />
-          <span className="text-xs font-black text-slate-900">{curScene.badge}</span>
+        <div className="absolute top-2 right-2 bg-white/95 backdrop-blur-md px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full shadow border border-slate-300 flex items-center gap-1 sm:gap-1.5">
+          <span className={`w-1.5 h-1.5 rounded-full ${curScene.badgeColor} animate-ping`} />
+          <span className="text-[10px] sm:text-xs font-black text-slate-900">{curScene.badge}</span>
         </div>
 
         {/* Floating Dialogue Bubble Indicator */}
-        <div className="absolute top-12 left-1/2 -translate-x-1/2 bg-white/95 border-2 border-slate-900 px-3.5 py-1.5 rounded-2xl shadow-xl text-center max-w-xs pointer-events-none animate-float-gentle">
-          <span className="text-[11px] font-black text-slate-900 block leading-tight">
+        <div className="absolute top-10 sm:top-12 left-1/2 -translate-x-1/2 bg-white/95 border-2 border-slate-900 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-xl sm:rounded-2xl shadow-xl text-center max-w-[85%] sm:max-w-xs pointer-events-none animate-float-gentle">
+          <span className="text-[10px] sm:text-[11px] font-black text-slate-900 block leading-tight">
             💬 "{curScene.speechBully}"
           </span>
         </div>
 
         {/* Playback Controls Floating Bar */}
-        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-slate-950/90 backdrop-blur-md text-white px-4 py-1.5 rounded-2xl flex items-center gap-3 shadow-2xl border border-slate-700">
+        <div className="absolute bottom-2 sm:bottom-3 left-1/2 -translate-x-1/2 bg-slate-950/90 backdrop-blur-md text-white px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-xl sm:rounded-2xl flex items-center gap-2 sm:gap-3 shadow-2xl border border-slate-700">
           <button
             onClick={handleTogglePlay}
-            className="p-1.5 hover:bg-white/20 rounded-xl transition text-white"
+            className="p-1 hover:bg-white/20 rounded-lg transition text-white"
             title={isPlaying ? 'Jeda Animasi' : 'Putar Animasi'}
           >
-            {isPlaying ? <Pause size={16} /> : <Play size={16} fill="white" />}
+            {isPlaying ? <Pause size={14} /> : <Play size={14} fill="white" />}
           </button>
 
           <button
             onClick={handleReplay}
-            className="p-1.5 hover:bg-white/20 rounded-xl transition text-slate-300 hover:text-white"
+            className="p-1 hover:bg-white/20 rounded-lg transition text-slate-300 hover:text-white"
             title="Ulangi Animasi"
           >
-            <RotateCcw size={15} />
+            <RotateCcw size={13} />
           </button>
 
           <div className="h-3 w-px bg-slate-700" />
 
           {/* Speed */}
-          <div className="flex items-center gap-1 text-[11px] font-black">
+          <div className="flex items-center gap-0.5 sm:gap-1 text-[10px] sm:text-[11px] font-black">
             {[0.5, 1, 1.5].map((s) => (
               <button
                 key={s}
                 onClick={() => { playClickSound(); setSpeed(s); }}
-                className={`px-1.5 py-0.5 rounded-md transition ${
+                className={`px-1 py-0.5 rounded transition ${
                   speed === s ? 'bg-sky-500 text-white' : 'text-slate-400 hover:text-white'
                 }`}
               >
@@ -826,15 +826,15 @@ export default function Character3DViewer() {
       </div>
 
       {/* Educational Explanation Box */}
-      <div className="p-3.5 bg-white border-t-2 border-slate-800 transition-all">
+      <div className="p-2.5 sm:p-3.5 bg-white border-t-2 border-slate-800 transition-all shrink-0">
         <div className="flex items-start gap-2">
-          <div className="p-1.5 rounded-xl bg-blue-100 text-blue-900 shrink-0 mt-0.5 border border-blue-300">
-            <Info size={16} />
+          <div className="p-1 sm:p-1.5 rounded-lg sm:rounded-xl bg-blue-100 text-blue-900 shrink-0 mt-0.5 border border-blue-300">
+            <Info size={14} className="sm:w-4 sm:h-4" />
           </div>
-          <div className="space-y-0.5">
-            <h4 className="font-black text-xs text-slate-900">{curScene.title}</h4>
-            <p className="text-[11px] text-slate-700 leading-snug">{curScene.description}</p>
-            <div className="pt-0.5 text-[11px] font-bold text-rose-700">
+          <div className="space-y-0.5 min-w-0">
+            <h4 className="font-black text-[11px] sm:text-xs text-slate-900 truncate">{curScene.title}</h4>
+            <p className="text-[10px] sm:text-[11px] text-slate-700 leading-snug line-clamp-2 sm:line-clamp-none">{curScene.description}</p>
+            <div className="pt-0.5 text-[10px] sm:text-[11px] font-bold text-rose-700">
               {curScene.moral}
             </div>
           </div>

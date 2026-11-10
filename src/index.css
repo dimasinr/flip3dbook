@@ -37,6 +37,24 @@
   transform: rotateX(6deg) translateY(-3px);
 }
 
+/* On mobile / small screens, disable steep 3D tilt for maximum readability and space */
+@media (max-width: 767px) {
+  .book-stage {
+    perspective: 1200px;
+    perspective-origin: 50% 50%;
+  }
+  .book-3d {
+    transform: rotateX(0deg) rotateY(0deg) !important;
+  }
+  .book-3d:hover {
+    transform: none !important;
+  }
+  .page-arch-left,
+  .page-arch-right {
+    transform: none !important;
+  }
+}
+
 /* Organic Page Arching (Natural Curved Book Pages) */
 .page-arch-left {
   transform: rotateY(2.5deg);

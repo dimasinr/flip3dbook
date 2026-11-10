@@ -37,96 +37,96 @@ export default function ScoreSummaryView({ onRestartLearning, onNavigateToCover 
   };
 
   return (
-    <div className="flex flex-col h-full bg-slate-50 text-slate-800 rounded-2xl p-5 md:p-6 shadow-sm border border-slate-200 overflow-y-auto custom-scrollbar">
+    <div className="flex flex-col h-full bg-slate-50 text-slate-800 rounded-2xl p-3.5 sm:p-5 md:p-6 shadow-sm border border-slate-200 overflow-y-auto cartoon-scroll">
       {/* Header */}
-      <div className="pb-4 mb-4 border-b border-slate-200">
-        <span className="text-[11px] font-extrabold tracking-wider text-indigo-700 uppercase bg-indigo-100 px-2.5 py-1 rounded-full">
+      <div className="pb-3 mb-3 border-b border-slate-200">
+        <span className="text-[10px] sm:text-[11px] font-extrabold tracking-wider text-indigo-700 uppercase bg-indigo-100 px-2.5 py-0.5 rounded-full">
           Rangkuman Hasil Belajar (FR-10)
         </span>
-        <h2 className="text-xl md:text-2xl font-black text-slate-900 mt-1">
+        <h2 className="text-base sm:text-lg md:text-xl font-black text-slate-900 mt-1">
           📊 Progres & Rekapitulasi Capaian
         </h2>
-        <p className="text-xs text-slate-500 mt-0.5">
-          Berikut adalah hasil evaluasi komprehensif setelah menempuh e-modul interaktif.
+        <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5">
+          Hasil evaluasi setelah menempuh seluruh modul interaktif.
         </p>
       </div>
 
       {/* Main Score Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 mb-5">
-        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm text-center">
-          <span className="text-xs font-bold text-slate-400 uppercase">Skor Pretest (Awal)</span>
-          <div className="text-3xl font-black text-blue-900 mt-1">{preScore}</div>
-          <span className="text-[10px] text-slate-500">Uji pengetahuan dasar</span>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3.5 mb-4">
+        <div className="bg-white p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-200 shadow-sm text-center">
+          <span className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase">Pretest (Awal)</span>
+          <div className="text-2xl sm:text-3xl font-black text-blue-900 mt-0.5">{preScore}</div>
+          <span className="text-[9px] sm:text-[10px] text-slate-500">Uji dasar</span>
         </div>
 
-        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm text-center">
-          <span className="text-xs font-bold text-slate-400 uppercase">Skor Posttest (Akhir)</span>
-          <div className="text-3xl font-black text-emerald-600 mt-1">{postScore}</div>
-          <span className="text-[10px] text-slate-500">Evaluasi pasca materi</span>
+        <div className="bg-white p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-200 shadow-sm text-center">
+          <span className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase">Posttest (Akhir)</span>
+          <div className="text-2xl sm:text-3xl font-black text-emerald-600 mt-0.5">{postScore}</div>
+          <span className="text-[9px] sm:text-[10px] text-slate-500">Evaluasi pasca materi</span>
         </div>
 
-        <div className="bg-gradient-to-br from-indigo-900 to-blue-950 text-white p-4 rounded-2xl shadow-sm text-center">
-          <span className="text-xs font-bold text-indigo-200 uppercase">Peningkatan Belajar</span>
-          <div className="text-3xl font-black text-amber-400 mt-1">
+        <div className="bg-gradient-to-br from-indigo-900 to-blue-950 text-white p-3 sm:p-4 rounded-xl sm:rounded-2xl shadow-sm text-center">
+          <span className="text-[10px] sm:text-xs font-bold text-indigo-200 uppercase">Peningkatan</span>
+          <div className="text-2xl sm:text-3xl font-black text-amber-400 mt-0.5">
             {delta >= 0 ? `+${delta}` : delta} Poin
           </div>
-          <span className="text-[10px] text-indigo-200">
-            {delta > 0 ? 'Kemajuan pemahaman terbukti!' : 'Pemahaman stabil'}
+          <span className="text-[9px] sm:text-[10px] text-indigo-200">
+            {delta > 0 ? 'Kemajuan terbukti!' : 'Pemahaman stabil'}
           </span>
         </div>
       </div>
 
       {/* Badges Earned */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm mb-5 space-y-3">
-        <h4 className="text-xs font-black uppercase text-slate-400 tracking-wider">
-          Lencana & Capaian Interaktif Terbuka:
+      <div className="bg-white p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-200 shadow-sm mb-4 space-y-2 sm:space-y-3">
+        <h4 className="text-[10px] sm:text-xs font-black uppercase text-slate-400 tracking-wider">
+          Lencana Interaktif Terbuka:
         </h4>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-          <div className="p-3 rounded-xl bg-sky-50 border border-sky-200 text-center space-y-1">
-            <span className="text-2xl block">🕵️</span>
-            <span className="text-xs font-bold text-sky-900 block">Detektif Kasus</span>
-            <span className="text-[10px] text-sky-600">Selesai Mini Game 1</span>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-2.5">
+          <div className="p-2 sm:p-3 rounded-xl bg-sky-50 border border-sky-200 text-center space-y-0.5">
+            <span className="text-xl sm:text-2xl block">🕵️</span>
+            <span className="text-[11px] sm:text-xs font-bold text-sky-900 block truncate">Detektif</span>
+            <span className="text-[9px] sm:text-[10px] text-sky-600 block">Game 1</span>
           </div>
 
-          <div className="p-3 rounded-xl bg-cyan-50 border border-cyan-200 text-center space-y-1">
-            <span className="text-2xl block">🛡️</span>
-            <span className="text-xs font-bold text-cyan-900 block">Cyber Defender</span>
-            <span className="text-[10px] text-cyan-600">Selesai Mini Game 2</span>
+          <div className="p-2 sm:p-3 rounded-xl bg-cyan-50 border border-cyan-200 text-center space-y-0.5">
+            <span className="text-xl sm:text-2xl block">🛡️</span>
+            <span className="text-[11px] sm:text-xs font-bold text-cyan-900 block truncate">Defender</span>
+            <span className="text-[9px] sm:text-[10px] text-cyan-600 block">Game 2</span>
           </div>
 
-          <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-center space-y-1">
-            <span className="text-2xl block">🧭</span>
-            <span className="text-xs font-bold text-emerald-900 block">Upstander Sejati</span>
-            <span className="text-[10px] text-emerald-600">Selesai Mini Game 3</span>
+          <div className="p-2 sm:p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-center space-y-0.5">
+            <span className="text-xl sm:text-2xl block">🧭</span>
+            <span className="text-[11px] sm:text-xs font-bold text-emerald-900 block truncate">Upstander</span>
+            <span className="text-[9px] sm:text-[10px] text-emerald-600 block">Game 3</span>
           </div>
 
-          <div className="p-3 rounded-xl bg-purple-50 border border-purple-200 text-center space-y-1">
-            <span className="text-2xl block">💡</span>
-            <span className="text-xs font-bold text-purple-900 block">Pematah Mitos</span>
-            <span className="text-[10px] text-purple-600">Selesai Mini Game 4</span>
+          <div className="p-2 sm:p-3 rounded-xl bg-purple-50 border border-purple-200 text-center space-y-0.5">
+            <span className="text-xl sm:text-2xl block">💡</span>
+            <span className="text-[11px] sm:text-xs font-bold text-purple-900 block truncate">Pematah Mitos</span>
+            <span className="text-[9px] sm:text-[10px] text-purple-600 block">Game 4</span>
           </div>
         </div>
       </div>
 
       {/* Certificate Claim Banner */}
-      <div className="bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 text-slate-950 p-5 rounded-2xl shadow-lg flex flex-col md:flex-row items-center justify-between gap-4 mb-4">
-        <div className="space-y-1 text-center md:text-left">
-          <div className="flex items-center justify-center md:justify-start gap-1.5 font-black text-sm">
-            <Sparkles size={18} />
+      <div className="bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 text-slate-950 p-3.5 sm:p-5 rounded-2xl shadow-lg flex flex-col sm:flex-row items-center justify-between gap-3 mb-3">
+        <div className="space-y-0.5 text-center sm:text-left">
+          <div className="flex items-center justify-center sm:justify-start gap-1.5 font-black text-xs sm:text-sm">
+            <Sparkles size={16} />
             <span>Sertifikat Kelulusan Siap Diterbitkan!</span>
           </div>
-          <p className="text-xs text-slate-900 leading-relaxed">
-            Atas nama <b>{studentName}</b> sebagai Duta Anti-Bullying MTs SA Riyadul Bayan (YAPIRA).
+          <p className="text-[11px] sm:text-xs text-slate-900 leading-snug">
+            Atas nama <b>{studentName}</b> sebagai Duta Anti-Bullying MTs SA Riyadul Bayan.
           </p>
         </div>
 
         <button
           onClick={handleOpenCertificate}
-          className="px-6 py-3 bg-slate-950 hover:bg-slate-900 text-white font-black text-xs rounded-xl shadow transition flex items-center gap-2 shrink-0 hover:scale-105"
+          className="w-full sm:w-auto px-5 py-2.5 bg-slate-950 hover:bg-slate-900 text-white font-black text-xs rounded-xl shadow transition flex items-center justify-center gap-2 shrink-0 active:scale-95"
         >
-          <Award size={18} className="text-amber-400" />
-          <span>Buka & Cetak Sertifikat</span>
+          <Award size={16} className="text-amber-400" />
+          <span>Buka Sertifikat</span>
         </button>
       </div>
 

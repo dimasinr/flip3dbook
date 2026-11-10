@@ -55,47 +55,46 @@ export default function PretestView({ onComplete, onNavigateToMateri }) {
   const answeredCount = Object.keys(answers).length;
 
   return (
-    <div className="flex flex-col h-full bg-slate-50 text-slate-800 rounded-2xl p-5 md:p-6 shadow-sm border border-slate-200 overflow-y-auto custom-scrollbar">
+    <div className="flex flex-col h-full bg-slate-50 text-slate-800 rounded-2xl p-3.5 sm:p-5 md:p-6 shadow-sm border border-slate-200 overflow-y-auto cartoon-scroll">
       {/* Header */}
-      <div className="pb-4 mb-4 border-b border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-3">
+      <div className="pb-3 mb-3 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
         <div>
-          <span className="text-[11px] font-extrabold tracking-wider text-blue-700 uppercase bg-blue-100 px-2.5 py-1 rounded-full">
+          <span className="text-[10px] sm:text-[11px] font-extrabold tracking-wider text-blue-700 uppercase bg-blue-100 px-2.5 py-0.5 rounded-full">
             Evaluasi Awal (FR-07)
           </span>
-          <h2 className="text-xl md:text-2xl font-black text-slate-900 mt-1">
+          <h2 className="text-base sm:text-lg md:text-xl font-black text-slate-900 mt-1">
             📝 Pretest: Uji Pemahaman Awal
           </h2>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Jawablah 10 pertanyaan Ya/Tidak di bawah ini dengan jujur sesuai pengetahuan awalmu.
+          <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5">
+            Jawablah 10 pertanyaan Ya/Tidak di bawah ini dengan jujur.
           </p>
         </div>
 
         {submitted ? (
-          <div className="bg-blue-900 text-white px-5 py-2.5 rounded-2xl flex items-center gap-3 shadow-md">
+          <div className="bg-blue-900 text-white px-3.5 py-2 rounded-2xl flex items-center gap-2.5 shadow-md self-start sm:self-auto">
             <div>
-              <span className="text-[10px] text-blue-200 uppercase font-bold block">Skor Pretest</span>
-              <span className="text-2xl font-black text-yellow-300">{score} / 100</span>
+              <span className="text-[9px] text-blue-200 uppercase font-bold block">Skor Pretest</span>
+              <span className="text-xl sm:text-2xl font-black text-yellow-300">{score} / 100</span>
             </div>
-            <Award className="text-yellow-400" size={32} />
+            <Award className="text-yellow-400 shrink-0" size={26} />
           </div>
         ) : (
-          <div className="text-xs font-bold text-slate-500 bg-slate-200/70 px-3 py-1.5 rounded-xl self-start">
+          <div className="text-[11px] font-bold text-slate-500 bg-slate-200/70 px-2.5 py-1 rounded-xl self-start">
             Terjawab: {answeredCount} dari {PRETEST_QUESTIONS.length}
           </div>
         )}
       </div>
 
       {/* Question List */}
-      <div className="space-y-4 flex-1">
+      <div className="space-y-3 flex-1">
         {PRETEST_QUESTIONS.map((q, idx) => {
           const userAnswer = answers[q.id];
           const isCorrect = submitted && userAnswer === q.answer;
-          const isWrong = submitted && userAnswer !== q.answer;
 
           return (
             <div
               key={q.id}
-              className={`p-4 rounded-xl border transition-all ${
+              className={`p-3 sm:p-4 rounded-xl border transition-all ${
                 submitted
                   ? isCorrect
                     ? 'bg-emerald-50 border-emerald-300'
@@ -103,33 +102,33 @@ export default function PretestView({ onComplete, onNavigateToMateri }) {
                   : 'bg-white border-slate-200 shadow-sm'
               }`}
             >
-              <div className="flex items-start justify-between gap-3">
-                <div className="space-y-1">
-                  <span className="text-xs font-black text-blue-600 block">SOAL {idx + 1}</span>
-                  <p className="text-sm font-bold text-slate-800 leading-snug">{q.question}</p>
+              <div className="flex items-start justify-between gap-2">
+                <div className="space-y-0.5">
+                  <span className="text-[10px] sm:text-xs font-black text-blue-600 block">SOAL {idx + 1}</span>
+                  <p className="text-xs sm:text-sm font-bold text-slate-800 leading-snug">{q.question}</p>
                 </div>
 
                 {submitted && (
                   <div className="shrink-0">
                     {isCorrect ? (
-                      <CheckCircle2 className="text-emerald-600" size={22} />
+                      <CheckCircle2 className="text-emerald-600" size={18} />
                     ) : (
-                      <XCircle className="text-rose-500" size={22} />
+                      <XCircle className="text-rose-500" size={18} />
                     )}
                   </div>
                 )}
               </div>
 
               {/* Ya / Tidak Buttons */}
-              <div className="flex items-center gap-3 mt-3">
+              <div className="flex items-center gap-2.5 mt-2.5">
                 <button
                   onClick={() => handleSelectAnswer(q.id, true)}
                   disabled={submitted}
-                  className={`px-5 py-1.5 rounded-xl text-xs font-black transition-all border ${
+                  className={`px-4 sm:px-5 py-1.5 rounded-xl text-xs font-black transition-all border ${
                     userAnswer === true
                       ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
                       : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-300'
-                  } ${submitted ? 'cursor-default' : ''}`}
+                  } ${submitted ? 'cursor-default' : 'active:scale-95'}`}
                 >
                   YA
                 </button>
@@ -137,11 +136,11 @@ export default function PretestView({ onComplete, onNavigateToMateri }) {
                 <button
                   onClick={() => handleSelectAnswer(q.id, false)}
                   disabled={submitted}
-                  className={`px-5 py-1.5 rounded-xl text-xs font-black transition-all border ${
+                  className={`px-4 sm:px-5 py-1.5 rounded-xl text-xs font-black transition-all border ${
                     userAnswer === false
                       ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
                       : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-300'
-                  } ${submitted ? 'cursor-default' : ''}`}
+                  } ${submitted ? 'cursor-default' : 'active:scale-95'}`}
                 >
                   TIDAK
                 </button>
@@ -149,9 +148,9 @@ export default function PretestView({ onComplete, onNavigateToMateri }) {
 
               {/* Explanation after submission */}
               {submitted && (
-                <div className="mt-3 pt-2 border-t border-slate-200/60 text-xs text-slate-600">
+                <div className="mt-2.5 pt-2 border-t border-slate-200/60 text-[11px] text-slate-600">
                   <span className="font-bold text-slate-800">
-                    Kunci Jawaban: {q.answer ? 'YA' : 'TIDAK'}.{' '}
+                    Kunci: {q.answer ? 'YA' : 'TIDAK'}.{' '}
                   </span>
                   <span>{q.explanation}</span>
                 </div>

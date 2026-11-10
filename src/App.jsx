@@ -174,7 +174,7 @@ export default function App() {
   const prevSpread = spreadIndex > 0 ? getSpreadContents(spreadIndex - 1) : null;
 
   return (
-    <div className="w-screen h-screen cartoon-room-bg flex items-center justify-center overflow-hidden p-2 sm:p-4 select-none relative">
+    <div className="w-full min-h-[100dvh] h-[100dvh] cartoon-room-bg flex items-center justify-center overflow-hidden p-1.5 sm:p-3 md:p-4 select-none relative">
       {/* 
         NO TOPBAR, NO NAVBAR, NOTHING DISTRACTING!
         Only the 3D Cartoon Book lying open in the center of the screen.

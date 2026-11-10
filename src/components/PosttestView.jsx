@@ -62,31 +62,31 @@ export default function PosttestView({ onComplete, onNavigateToSummary }) {
   const answeredCount = Object.keys(answers).length;
 
   return (
-    <div className="flex flex-col h-full bg-slate-50 text-slate-800 rounded-2xl p-5 md:p-6 shadow-sm border border-slate-200 overflow-y-auto custom-scrollbar">
+    <div className="flex flex-col h-full bg-slate-50 text-slate-800 rounded-2xl p-3.5 sm:p-5 md:p-6 shadow-sm border border-slate-200 overflow-y-auto cartoon-scroll">
       {/* Header */}
-      <div className="pb-4 mb-4 border-b border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-3">
+      <div className="pb-3 mb-3 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
         <div>
-          <span className="text-[11px] font-extrabold tracking-wider text-emerald-700 uppercase bg-emerald-100 px-2.5 py-1 rounded-full">
+          <span className="text-[10px] sm:text-[11px] font-extrabold tracking-wider text-emerald-700 uppercase bg-emerald-100 px-2.5 py-0.5 rounded-full">
             Evaluasi Akhir (FR-08)
           </span>
-          <h2 className="text-xl md:text-2xl font-black text-slate-900 mt-1">
+          <h2 className="text-base sm:text-lg md:text-xl font-black text-slate-900 mt-1">
             🎓 Posttest: Evaluasi Pemahaman
           </h2>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Pilihlah satu jawaban yang paling tepat dari 10 soal evaluasi di bawah ini.
+          <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5">
+            Pilihlah satu jawaban yang paling tepat dari 10 soal evaluasi.
           </p>
         </div>
 
         {submitted ? (
-          <div className="bg-emerald-900 text-white px-5 py-2.5 rounded-2xl flex items-center gap-3 shadow-md">
+          <div className="bg-emerald-900 text-white px-3.5 py-2 rounded-2xl flex items-center gap-2.5 shadow-md self-start sm:self-auto">
             <div>
-              <span className="text-[10px] text-emerald-200 uppercase font-bold block">Skor Posttest</span>
-              <span className="text-2xl font-black text-yellow-300">{score} / 100</span>
+              <span className="text-[9px] text-emerald-200 uppercase font-bold block">Skor Posttest</span>
+              <span className="text-xl sm:text-2xl font-black text-yellow-300">{score} / 100</span>
             </div>
-            <Award className="text-yellow-400" size={32} />
+            <Award className="text-yellow-400 shrink-0" size={26} />
           </div>
         ) : (
-          <div className="text-xs font-bold text-slate-500 bg-slate-200/70 px-3 py-1.5 rounded-xl self-start">
+          <div className="text-[11px] font-bold text-slate-500 bg-slate-200/70 px-2.5 py-1 rounded-xl self-start">
             Terjawab: {answeredCount} dari {POSTTEST_QUESTIONS.length}
           </div>
         )}
@@ -94,25 +94,25 @@ export default function PosttestView({ onComplete, onNavigateToSummary }) {
 
       {/* Comparison Analytics Alert if submitted */}
       {submitted && (
-        <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white shadow-md flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="mb-4 p-3 sm:p-4 rounded-2xl bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div className="space-y-1">
-            <span className="text-xs text-sky-300 font-bold uppercase tracking-wider flex items-center gap-1.5">
-              <TrendingUp size={16} />
-              Hasil Perbandingan Belajar (Pretest vs Posttest)
+            <span className="text-[10px] sm:text-xs text-sky-300 font-bold uppercase tracking-wider flex items-center gap-1.5">
+              <TrendingUp size={14} />
+              Perbandingan Pretest vs Posttest
             </span>
-            <div className="flex items-center gap-4 pt-1">
+            <div className="flex items-center gap-3 pt-0.5">
               <div>
-                <span className="text-[11px] text-slate-300 block">Skor Pretest</span>
-                <span className="text-lg font-bold text-slate-100">{pretestScore}</span>
+                <span className="text-[10px] text-slate-300 block">Pretest</span>
+                <span className="text-base sm:text-lg font-bold text-slate-100">{pretestScore}</span>
               </div>
-              <ArrowRight size={18} className="text-sky-400 mt-2" />
+              <ArrowRight size={15} className="text-sky-400 mt-1" />
               <div>
-                <span className="text-[11px] text-slate-300 block">Skor Posttest</span>
-                <span className="text-lg font-black text-yellow-300">{score}</span>
+                <span className="text-[10px] text-slate-300 block">Posttest</span>
+                <span className="text-base sm:text-lg font-black text-yellow-300">{score}</span>
               </div>
-              <div className="pl-3 border-l border-slate-700">
-                <span className="text-[11px] text-emerald-300 block">Peningkatan</span>
-                <span className="text-lg font-black text-emerald-400">
+              <div className="pl-2.5 border-l border-slate-700">
+                <span className="text-[10px] text-emerald-300 block">Peningkatan</span>
+                <span className="text-base sm:text-lg font-black text-emerald-400">
                   {delta >= 0 ? `+${delta}` : delta} Poin
                 </span>
               </div>
@@ -121,9 +121,9 @@ export default function PosttestView({ onComplete, onNavigateToSummary }) {
 
           <button
             onClick={onNavigateToSummary}
-            className="w-full md:w-auto px-5 py-2.5 bg-yellow-400 hover:bg-yellow-300 text-slate-950 font-black rounded-xl text-xs transition shadow flex items-center justify-center gap-1.5 shrink-0"
+            className="w-full sm:w-auto px-4 py-2 bg-yellow-400 hover:bg-yellow-300 text-slate-950 font-black rounded-xl text-xs transition shadow flex items-center justify-center gap-1.5 shrink-0"
           >
-            <span>Klaim Sertifikat Duta</span>
+            <span>Klaim Sertifikat</span>
             <ArrowRight size={14} />
           </button>
         </div>
