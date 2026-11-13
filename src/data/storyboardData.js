@@ -1,0 +1,533 @@
+// Storyboard & Script Dialog 30 Halaman E-Modul "Stop Bullying, Start Caring"
+// Sesuai prd_storyboard_e_modul_revisi_karakter_ibu_nur.md
+
+export const CHARACTERS_INFO = {
+  bima: {
+    id: 'bima',
+    name: 'Bima',
+    role: 'Siswa Energik & Tegas',
+    color: '#2563EB', // Blue
+    badgeColor: 'bg-blue-600',
+    bgColor: 'bg-blue-50 border-blue-300',
+    modelFile: '/model/bima_model_character.glb',
+    desc: 'Energik, spontan, kadang pemarah jika melihat ketidakadilan.',
+  },
+  dito: {
+    id: 'dito',
+    name: 'Dito',
+    role: 'Siswa Sensitif & Korban yang Berani Bangkit',
+    color: '#D97706', // Amber/Orange
+    badgeColor: 'bg-amber-600',
+    bgColor: 'bg-amber-50 border-amber-300',
+    modelFile: '/model/dito_model_character.glb',
+    desc: 'Pendiam, sensitif, pemalu, sering menjadi target perundungan namun belajar berani melapor.',
+  },
+  sari: {
+    id: 'sari',
+    name: 'Sari',
+    role: 'Siswa Cerdas & Upstander Aktif',
+    color: '#059669', // Emerald
+    badgeColor: 'bg-emerald-600',
+    bgColor: 'bg-emerald-50 border-emerald-300',
+    modelFile: '/model/sari_model_character.glb',
+    desc: 'Cerdas, empatik, penengah, saksi yang berani bertindak (upstander aktif).',
+  },
+  nur: {
+    id: 'nur',
+    name: 'Ibu Nur',
+    role: 'Tenaga Kesehatan (Nakes) UKS',
+    color: '#7C3AED', // Violet
+    badgeColor: 'bg-purple-600',
+    bgColor: 'bg-purple-50 border-purple-300',
+    modelFile: '/model/nur_nurse.glb',
+    desc: 'Tenaga kesehatan sekolah (perawat/bidan/dokter) yang empatis, mengedukasi dampak fisik-mental & pendampingan pemulihan.',
+  },
+};
+
+export const STORYBOARD_PAGES = [
+  // -------------------------------------------------------------
+  // SUB-BAB 01: MENGENAL BULLYING
+  // -------------------------------------------------------------
+  {
+    pageNumber: 1,
+    subBab: 'SUB-BAB 01',
+    subBabTitle: 'Mengenal Bullying',
+    type: 'subbab_cover',
+    title: 'SUB-BAB 01: Mengenal Bullying',
+    subtitle: 'Memahami Hakikat, Definisi, dan Karakteristik Perundungan',
+    description: 'Pintu awal untuk mengenali apa yang membedakan perundungan dengan konflik biasa di kalangan remaja madrasah.',
+    icon: 'BookOpen',
+    themeColor: 'blue',
+  },
+  {
+    pageNumber: 2,
+    subBab: 'SUB-BAB 01',
+    subBabTitle: 'Mengenal Bullying',
+    type: 'character_center',
+    title: 'Apa itu Bullying?',
+    subtitle: 'Pengantar Pemahaman Bersama Tenaga Kesehatan Sekolah',
+    characters: ['nur'],
+    characterState: { nur: 'idle_smile' },
+    summary: 'Bullying bukanlah sekadar candaan remaja atau pertengkaran biasa. Bullying adalah tindakan agresif sistematis yang memiliki pola bahaya nyata.',
+  },
+  {
+    pageNumber: 3,
+    subBab: 'SUB-BAB 01',
+    subBabTitle: 'Mengenal Bullying',
+    type: 'dialogue_two',
+    title: 'Perbedaan Bullying & Candaan Biasa',
+    characters: ['bima', 'dito'],
+    characterState: { bima: 'talking_confused', dito: 'talking_explain' },
+    dialogues: [
+      {
+        speaker: 'bima',
+        text: 'Dit, perundungan atau bullying itu sebenarnya apa, sih? Sama nggak kayak berantem biasa?',
+      },
+      {
+        speaker: 'dito',
+        text: 'Beda, Bim. Bullying itu kekerasan yang sengaja dilakukan berulang-ulang buat nyakitin orang lain. Biasanya yang ngelakuin ngerasa lebih kuat dan korbannya nggak berdaya.',
+      },
+    ],
+    takeaway: 'Kunci Perbedaan: Niat menyakiti secara sadar, dilakukan berulang, dan ada ketimpangan kekuatan.',
+  },
+  {
+    pageNumber: 4,
+    subBab: 'SUB-BAB 01',
+    subBabTitle: 'Mengenal Bullying',
+    type: 'explanation_single',
+    title: '6 Karakteristik Utama Bullying',
+    characters: ['nur'],
+    characterState: { nur: 'talking_pointing' },
+    dialogue: {
+      speaker: 'nur',
+      text: 'Tepat sekali, Dito! Sebagai tenaga kesehatan, Ibu melihat ada 6 karakteristik utama bullying: dilakukan berulang, ada niat menyakiti, ketidakseimbangan kekuatan, korban sulit membela diri, bentuknya beragam, dan dampaknya sangat serius bagi fisik maupun mental.',
+    },
+    bulletPoints: [
+      '1. Dilakukan secara berulang-ulang (Repetitive)',
+      '2. Disengaja dengan niat menyakiti (Intentional)',
+      '3. Adanya ketimpangan kuasa/kekuatan (Power Imbalance)',
+      '4. Korban merasa tidak berdaya dan tertekan',
+      '5. Bentuk perundungan bisa kasat mata atau tersembunyi',
+      '6. Menimbulkan dampak luka fisik dan trauma psikologis',
+    ],
+  },
+  {
+    pageNumber: 5,
+    subBab: 'SUB-BAB 01',
+    subBabTitle: 'Mengenal Bullying',
+    type: 'quiz_multiple_choice',
+    title: 'Kuis Evaluasi Sub-Bab 01',
+    quizId: 'quiz_subbab_1',
+    question: 'Berdasarkan tahap perkembangan remaja, usia berapakah yang secara statistik paling banyak melakukan perilaku bullying?',
+    options: [
+      { key: 'A', text: '10 - 11 tahun' },
+      { key: 'B', text: '12 - 14 tahun (Remaja Awal / SMP-MTs)' },
+      { key: 'C', text: '18 - 21 tahun' },
+    ],
+    correctAnswer: 'B',
+    explanation: 'Benar! Usia 12-14 tahun (masa pubertas awal) secara statistik merupakan fase di mana dorongan konformitas kelompok dan agresivitas sosial paling rentan memicu bullying jika tidak dibimbing dengan baik.',
+  },
+
+  // -------------------------------------------------------------
+  // SUB-BAB 02: BENTUK DAN CONTOH BULLYING
+  // -------------------------------------------------------------
+  {
+    pageNumber: 6,
+    subBab: 'SUB-BAB 02',
+    subBabTitle: 'Bentuk & Contoh Bullying',
+    type: 'subbab_cover',
+    title: 'SUB-BAB 02: Bentuk dan Contoh Bullying',
+    subtitle: 'Mengenali Wujud Perundungan Fisik, Verbal, Relasional, dan Siber',
+    description: 'Jangan tertipu oleh anggapan bahwa bullying hanya soal memukul. Bentuk kata-kata dan pengucilan juga sangat mematikan.',
+    icon: 'Layers',
+    themeColor: 'amber',
+  },
+  {
+    pageNumber: 7,
+    subBab: 'SUB-BAB 02',
+    subBabTitle: 'Bentuk & Contoh Bullying',
+    type: 'character_center',
+    title: '5 Bentuk Utama Bullying',
+    subtitle: 'Waspada Perundungan Nyata Maupun di Dunia Maya',
+    characters: ['sari'],
+    characterState: { sari: 'idle_reading_phone' },
+    summary: 'Bullying bisa berwujud fisik, lisan (verbal), hubungan sosial (relasional), digital (siber), hingga intimidasi barang milik teman.',
+  },
+  {
+    pageNumber: 8,
+    subBab: 'SUB-BAB 02',
+    subBabTitle: 'Bentuk & Contoh Bullying',
+    type: 'dialogue_two',
+    title: 'Bullying Fisik, Verbal & Relasional',
+    characters: ['bima', 'sari'],
+    characterState: { bima: 'talking_angry', sari: 'talking_explain' },
+    dialogues: [
+      {
+        speaker: 'bima',
+        text: 'Bullying fisik itu gampang kelihatan, kayak memukul atau merusak barang. Tapi, ngasih julukan jelek ke teman itu juga dihitung bullying (verbal), kan?',
+      },
+      {
+        speaker: 'sari',
+        text: 'Iya, Bim! Belum lagi bullying relasional yang tersembunyi. Contohnya, sengaja mengucilkan teman dari kelompok atau menatap sinis biar dia merasa terasingkan.',
+      },
+    ],
+    takeaway: 'Luka kata-kata dan pengucilan tidak terlihat mata, tetapi bisa membekas seumur hidup di hati korban.',
+  },
+  {
+    pageNumber: 9,
+    subBab: 'SUB-BAB 02',
+    subBabTitle: 'Bentuk & Contoh Bullying',
+    type: 'explanation_single',
+    title: 'Bahaya Laten Cyberbullying',
+    characters: ['dito'],
+    characterState: { dito: 'sad_holding_phone' },
+    dialogue: {
+      speaker: 'dito',
+      text: 'Satu lagi yang paling seram saat ini: Cyberbullying. Pelakunya sering pakai akun palsu buat nyebar foto tanpa izin, neror, atau nulis komentar kebencian di medsos kita. Jejak digitalnya sulit hilang...',
+    },
+    bulletPoints: [
+      '• Teror via pesan WhatsApp, direct message, atau grup kelas',
+      '• Mengunggah foto aib atau tangkapan layar pribadi teman tanpa izin',
+      '• Membuat akun palsu (fake account) untuk memfitnah atau mencaci',
+      '• Komentar jahat beramai-ramai pada postingan korban',
+    ],
+  },
+  {
+    pageNumber: 10,
+    subBab: 'SUB-BAB 02',
+    subBabTitle: 'Bentuk & Contoh Bullying',
+    type: 'quiz_matching',
+    title: 'Kuis Mencocokkan: Jenis Tindakan',
+    quizId: 'quiz_subbab_2',
+    instruction: 'Cocokkan setiap contoh tindakan dengan jenis bullying yang sesuai!',
+    pairs: [
+      { action: 'Memukul atau menjegal teman di koridor', category: 'Fisik' },
+      { action: 'Membuat akun palsu untuk mengejek di medsos', category: 'Siber' },
+      { action: 'Sengaja mengucilkan teman dari kelompok belajar', category: 'Relasional' },
+      { action: 'Memberi julukan buruk dan menghina nama orang tua', category: 'Verbal' },
+    ],
+    categories: ['Fisik', 'Verbal', 'Relasional', 'Siber'],
+  },
+
+  // -------------------------------------------------------------
+  // SUB-BAB 03: PELAKU, KORBAN, DAN DAMPAK BULLYING
+  // -------------------------------------------------------------
+  {
+    pageNumber: 11,
+    subBab: 'SUB-BAB 03',
+    subBabTitle: 'Pelaku, Korban & Dampak',
+    type: 'subbab_cover',
+    title: 'SUB-BAB 03: Pelaku, Korban, dan Dampak Bullying',
+    subtitle: 'Membedah Akar Masalah dan Bekas Trauma Jangka Panjang',
+    description: 'Mengapa seseorang bisa menjadi pelaku perundungan, dan bagaimana penderitaan korban yang harus kita selamatkan.',
+    icon: 'AlertTriangle',
+    themeColor: 'rose',
+  },
+  {
+    pageNumber: 12,
+    subBab: 'SUB-BAB 03',
+    subBabTitle: 'Pelaku, Korban & Dampak',
+    type: 'character_two_standing',
+    title: 'Siapa Saja yang Terlibat & Apa Dampaknya?',
+    subtitle: 'Dua Sisi Peran: Sang Penindas dan yang Tertindas',
+    characters: ['bima', 'dito'],
+    characterState: { bima: 'idle_confident', dito: 'idle_sad_looking_down' },
+    summary: 'Bullying melibatkan pelaku yang mencari dominasi semu, korban yang tertekan dalam kesendirian, serta saksi yang menentukan akhir cerita.',
+  },
+  {
+    pageNumber: 13,
+    subBab: 'SUB-BAB 03',
+    subBabTitle: 'Pelaku, Korban & Dampak',
+    type: 'dialogue_two',
+    title: 'Kisah Dito: Jeritan Hati Seorang Korban',
+    characters: ['sari', 'dito'],
+    characterState: { dito: 'crying_wiping_tears', sari: 'talking_comforting' },
+    dialogues: [
+      {
+        speaker: 'dito',
+        text: 'Sari, jadi korban itu berat banget... Rasanya selalu cemas, takut masuk sekolah, depresi, sampai ngerasa nggak berharga...',
+      },
+      {
+        speaker: 'sari',
+        text: 'Kamu nggak sendirian, Dit! Saksi (bystander) pasif itu sama buruknya. Sebagai saksi aktif, aku pasti bakal temenin kamu dan berani lapor!',
+      },
+    ],
+    takeaway: 'Upstander Aktif: Keberanian saksi untuk merangkul korban adalah obat paling ampuh melawan keputusasaan.',
+  },
+  {
+    pageNumber: 14,
+    subBab: 'SUB-BAB 03',
+    subBabTitle: 'Pelaku, Korban & Dampak',
+    type: 'explanation_single',
+    title: 'Dampak Medis & Psikologis Jangka Panjang',
+    characters: ['nur'],
+    characterState: { nur: 'talking_serious' },
+    dialogue: {
+      speaker: 'nur',
+      text: 'Ibu sering merawat luka fisik korban, tapi luka mentalnya jauh lebih dalam. Tidak hanya menghancurkan korban dengan depresi dan trauma, dampak bullying bagi pelaku juga sangat fatal. Pelaku bisa kehilangan empati dan sangat berisiko terjerumus pada tindakan kriminal di masa depan.',
+    },
+    bulletPoints: [
+      '• Korban: Depresi, kecemasan akut, penurunan prestasi, fobia sekolah',
+      '• Pelaku: Penurunan kepekaan moral, rentan masalah hukum di masa dewasa',
+      '• Saksi Pasif: Rasa bersalah kronis, hilangnya rasa aman di lingkungan belajar',
+    ],
+  },
+  {
+    pageNumber: 15,
+    subBab: 'SUB-BAB 03',
+    subBabTitle: 'Pelaku, Korban & Dampak',
+    type: 'quiz_categorize',
+    title: 'Kuis Klasifikasi: Faktor Pemicu Bullying',
+    quizId: 'quiz_subbab_3',
+    instruction: 'Pilih apakah faktor berikut termasuk Faktor Internal atau Faktor Eksternal!',
+    items: [
+      { text: 'Egoisme tinggi dan kesulitan mengontrol emosi', category: 'Internal' },
+      { text: 'Pola asuh keluarga yang keras dan kurang kasih sayang', category: 'Eksternal' },
+      { text: 'Minimnya empati terhadap penderitaan orang lain', category: 'Internal' },
+      { text: 'Pengaruh konten kekerasan di medsos dan game online', category: 'Eksternal' },
+    ],
+  },
+
+  // -------------------------------------------------------------
+  // SUB-BAB 04: UPAYA PENCEGAHAN BULLYING
+  // -------------------------------------------------------------
+  {
+    pageNumber: 16,
+    subBab: 'SUB-BAB 04',
+    subBabTitle: 'Upaya Pencegahan Bullying',
+    type: 'subbab_cover',
+    title: 'SUB-BAB 04: Upaya Pencegahan Bullying',
+    subtitle: 'Membangun Ekosistem Madrasah yang Aman, Ramah, dan Peduli',
+    description: 'Mencegah selalu lebih baik daripada mengobati. Langkah nyata dimulai dari kelas kita sendiri.',
+    icon: 'Shield',
+    themeColor: 'emerald',
+  },
+  {
+    pageNumber: 17,
+    subBab: 'SUB-BAB 04',
+    subBabTitle: 'Upaya Pencegahan Bullying',
+    type: 'character_two_standing',
+    title: 'Bagaimana Cara Mencegahnya?',
+    subtitle: 'Persahabatan Sejati yang Saling Menjaga',
+    characters: ['sari', 'dito'],
+    characterState: { sari: 'idle_smile_friends', dito: 'idle_smile_friends' },
+    summary: 'Pencegahan perundungan membutuhkan sinergi antara kepedulian siswa, komitmen guru, dan dukungan tenaga kesehatan sekolah.',
+  },
+  {
+    pageNumber: 18,
+    subBab: 'SUB-BAB 04',
+    subBabTitle: 'Upaya Pencegahan Bullying',
+    type: 'dialogue_two',
+    title: 'Peran Aktif Siswa di Madrasah',
+    characters: ['bima', 'sari'],
+    characterState: { bima: 'talking_energetic', sari: 'talking_agree' },
+    dialogues: [
+      {
+        speaker: 'bima',
+        text: 'Pencegahan bullying itu tanggung jawab kita semua kan, Sar? Bukan cuma tugas guru dan tenaga kesehatan aja.',
+      },
+      {
+        speaker: 'sari',
+        text: 'Betul! Kita sebagai siswa harus mulai dari hal kecil: menanamkan empati, saling menghargai perbedaan, dan menciptakan suasana kelas yang inklusif (ramah untuk semua).',
+      },
+    ],
+    takeaway: 'Kelas Inklusif: Setiap siswa berhak memiliki teman dan tidak boleh ada satupun yang ditinggalkan sendirian.',
+  },
+  {
+    pageNumber: 19,
+    subBab: 'SUB-BAB 04',
+    subBabTitle: 'Upaya Pencegahan Bullying',
+    type: 'explanation_single',
+    title: 'Peran Sekolah & Ruang Kesehatan (UKS)',
+    characters: ['nur'],
+    characterState: { nur: 'talking_explaining_board' },
+    dialogue: {
+      speaker: 'nur',
+      text: 'Selain kepedulian kalian, sekolah juga memiliki langkah wajib, seperti mengadakan sosialisasi rutin, membentuk tim Satgas Anti-Bullying, dan menegakkan aturan yang tegas. Kami di ruang kesehatan juga selalu siap memberikan sosialisasi dan mendampingi pemulihan korban.',
+    },
+    bulletPoints: [
+      '• Pembentukan Satgas Pencegahan Kekerasan di Madrasah',
+      '• Penyusunan Kesepakatan Kelas Anti-Perundungan bersama Wali Kelas',
+      '• Sosialisasi kesehatan mental dan pertolongan pertama di UKS',
+      '• Penerapan budaya 5S: Senyum, Sapa, Salam, Sopan, Santun',
+    ],
+  },
+  {
+    pageNumber: 20,
+    subBab: 'SUB-BAB 04',
+    subBabTitle: 'Upaya Pencegahan Bullying',
+    type: 'quiz_multiple_choice',
+    title: 'Kuis Evaluasi Sub-Bab 04',
+    quizId: 'quiz_subbab_4',
+    question: 'Langkah pencegahan paling tepat dan bijak yang bisa dilakukan seorang siswa di kelas adalah...',
+    options: [
+      { key: 'A', text: 'Menertawakan teman yang diejek agar suasana kelas tidak kaku' },
+      { key: 'B', text: 'Membela teman yang dikucilkan dan melaporkannya kepada guru / nakes sekolah' },
+      { key: 'C', text: 'Diam dan pura-pura tidak melihat agar diri sendiri aman' },
+    ],
+    correctAnswer: 'B',
+    explanation: 'Hebat! Membela teman yang terpojok dan berani melapor ke pihak guru/nakes sekolah adalah wujud nyata dari Upstander yang berintegritas.',
+  },
+
+  // -------------------------------------------------------------
+  // SUB-BAB 05: CARA MENGHADAPI DAN MELAPORKAN BULLYING
+  // -------------------------------------------------------------
+  {
+    pageNumber: 21,
+    subBab: 'SUB-BAB 05',
+    subBabTitle: 'Menghadapi & Melaporkan',
+    type: 'subbab_cover',
+    title: 'SUB-BAB 05: Cara Menghadapi & Melaporkan Bullying',
+    subtitle: 'Strategi Tangguh Melindungi Diri dan Prosedur Resmi Pengaduan',
+    description: 'Ketahui tindakan taktis saat menghadapi penindas dan hilangkan ketakutan untuk melapor.',
+    icon: 'PhoneCall',
+    themeColor: 'cyan',
+  },
+  {
+    pageNumber: 22,
+    subBab: 'SUB-BAB 05',
+    subBabTitle: 'Menghadapi & Melaporkan',
+    type: 'character_center',
+    title: 'Berani Bertindak dan Lapor!',
+    subtitle: 'Dito: Dari Korban Menjadi Pribadi yang Percaya Diri',
+    characters: ['dito'],
+    characterState: { dito: 'idle_brave_fist_pump' },
+    summary: 'Melapor bukanlah tanda kelemahan dan bukan tindakan mengadu. Melapor adalah langkah penyelamatan hak asasi di sekolah.',
+  },
+  {
+    pageNumber: 23,
+    subBab: 'SUB-BAB 05',
+    subBabTitle: 'Menghadapi & Melaporkan',
+    type: 'dialogue_two',
+    title: 'Sikap Tegas & Simpan Bukti Digital',
+    characters: ['sari', 'dito'],
+    characterState: { sari: 'talking_instructing', dito: 'talking_confident' },
+    dialogues: [
+      {
+        speaker: 'sari',
+        text: 'Dit, kalau ada yang ganggu kamu lagi, tatap matanya dan bilang "TIDAK" dengan tegas! Habis itu, langsung lari ke tempat yang aman atau cari guru.',
+      },
+      {
+        speaker: 'dito',
+        text: 'Oke, Sar! Kalau mereka neror lewat chat, aku nggak akan hapus pesannya, tapi aku screenshot dulu sebagai bukti buat dilaporin ke guru atau Ibu Nur.',
+      },
+    ],
+    takeaway: 'Taktik 3L: Lawan dengan tegas secara verbal, Lari ke zona aman, dan Laporkan bersama bukti otentik.',
+  },
+  {
+    pageNumber: 24,
+    subBab: 'SUB-BAB 05',
+    subBabTitle: 'Menghadapi & Melaporkan',
+    type: 'explanation_single',
+    title: 'Alur Pengaduan Aman di Madrasah',
+    characters: ['nur'],
+    characterState: { nur: 'talking_reassuring' },
+    dialogue: {
+      speaker: 'nur',
+      text: 'Jangan pernah takut dianggap "pengadu". Segera laporkan ke Guru, BK, atau langsung ke ruang Ibu di UKS/Puskesmas. Kami akan mencatat laporan, mengklarifikasi secara objektif, mendampingi pemulihan mental dan fisik korban, serta membina pelakunya agar jera.',
+    },
+    bulletPoints: [
+      '1. Pelaporan Langsung: Guru BK, Wali Kelas, Guru Piket, atau Nakes UKS',
+      '2. Saluran Rahasia: Kotak Curhat Siswa di depan Perpustakaan',
+      '3. Pendampingan Objektif: Menjamin kerahasiaan identitas saksi dan korban',
+      '4. Pemulihan Holistik: Perawatan luka fisik & konseling pemulihan trauma',
+    ],
+  },
+  {
+    pageNumber: 25,
+    subBab: 'SUB-BAB 05',
+    subBabTitle: 'Menghadapi & Melaporkan',
+    type: 'quiz_case_study',
+    title: 'Kuis Studi Kasus Interaktif',
+    quizId: 'quiz_subbab_5',
+    scenario: 'Kamu sedang berjalan di lorong sepi dan melihat Dito dikunci di dalam toilet oleh kakak kelas yang menertawakannya dari luar. Dito menggedor pintu meminta tolong.',
+    question: 'Apa tindakan paling tepat dan cepat yang harus kamu lakukan sebagai saksi (upstander) yang bijak?',
+    options: [
+      { key: 'A', text: 'Merekam kejadian dengan HP dan mengunggahnya ke media sosial' },
+      { key: 'B', text: 'Segera berlari memanggil guru piket, satpam, atau petugas madrasah terdekat' },
+      { key: 'C', text: 'Menunggu sampai bel pulang berbunyi dan membiarkan Dito sendirian' },
+    ],
+    correctAnswer: 'B',
+    explanation: 'Tepat sekali! Memanggil bantuan otoritas sekolah (guru piket/satpam) menjamin keselamatan fisik korban segera tertangani tanpa membahayakan dirimu sendiri.',
+  },
+
+  // -------------------------------------------------------------
+  // SUB-BAB 06: EVALUASI DAN KOMITMEN STOP BULLYING
+  // -------------------------------------------------------------
+  {
+    pageNumber: 26,
+    subBab: 'SUB-BAB 06',
+    subBabTitle: 'Evaluasi & Komitmen',
+    type: 'subbab_cover',
+    title: 'SUB-BAB 06: Evaluasi dan Komitmen Stop Bullying',
+    subtitle: 'Refleksi Hati dan Ikrar Nyata Siswa MTs SA Riyadul Bayan',
+    description: 'Saatnya merenungi perbuatan kita dan menyatakan tekad bersama untuk madrasah yang penuh kasih sayang.',
+    icon: 'HeartHandshake',
+    themeColor: 'purple',
+  },
+  {
+    pageNumber: 27,
+    subBab: 'SUB-BAB 06',
+    subBabTitle: 'Evaluasi & Komitmen',
+    type: 'character_all_cheering',
+    title: 'Waktunya Refleksi Diri!',
+    subtitle: 'Bersama Bima, Dito, Sari, dan Ibu Nur',
+    characters: ['bima', 'dito', 'sari', 'nur'],
+    characterState: { all: 'cheering_happy' },
+    summary: 'Kita semua memiliki andil dalam menciptakan sekolah yang damai. Kejujuran pada diri sendiri adalah awal kematangan budi pekerti.',
+  },
+  {
+    pageNumber: 28,
+    subBab: 'SUB-BAB 06',
+    subBabTitle: 'Evaluasi & Komitmen',
+    type: 'dialogue_two',
+    title: 'Merenungi Kata & Perbuatan Kita',
+    characters: ['bima', 'dito'],
+    characterState: { bima: 'talking_reflective', dito: 'talking_smile' },
+    dialogues: [
+      {
+        speaker: 'bima',
+        text: 'Coba kita pikir-pikir lagi, pernah nggak ya gurauan kita tanpa sadar menyakiti hati atau fisik teman?',
+      },
+      {
+        speaker: 'dito',
+        text: 'Iya, Bim. Makanya penting banget buat ngebayangin gimana rasanya kalau kita yang ada di posisi korban. Harus lebih jaga lisan dan perbuatan.',
+      },
+    ],
+    takeaway: 'Empati Sejati: Bayangkan jika dirimu yang disakiti, niscaya lidah dan tanganmu akan terjaga dari kezaliman.',
+  },
+  {
+    pageNumber: 29,
+    subBab: 'SUB-BAB 06',
+    subBabTitle: 'Evaluasi & Komitmen',
+    type: 'quiz_true_false_five',
+    title: 'Evaluasi Mandiri: 5 Pernyataan Sikap',
+    quizId: 'quiz_subbab_6',
+    characters: ['nur'],
+    characterState: { nur: 'idle_smile' },
+    bubblePrompt: 'Mari kita uji pemahaman kalian! Jawablah 5 pertanyaan Benar atau Salah di bawah ini dengan jujur untuk melihat seberapa peduli kita.',
+    questions: [
+      { id: 1, text: 'Bullying adalah konflik biasa yang hanya terjadi satu kali secara kebetulan.', answer: false, explanation: 'Salah. Bullying dilakukan berulang kali dan memiliki pola kesengajaan.' },
+      { id: 2, text: 'Sengaja mengucilkan teman dari pergaulan termasuk jenis Bullying Relasional.', answer: true, explanation: 'Benar. Pengucilan merusak relasi sosial korban secara sengaja.' },
+      { id: 3, text: 'Remaja usia 12-14 tahun rentan melakukan bullying karena masa pubertas awal.', answer: true, explanation: 'Benar. Fase pencarian identitas kelompok memerlukan bimbingan empati yang kuat.' },
+      { id: 4, text: 'Saksi yang melihat bullying sebaiknya diam saja agar tidak ikut jadi sasaran.', answer: false, explanation: 'Salah! Diamnya saksi justru memberi legitimasi bagi penindas untuk terus beraksi.' },
+      { id: 5, text: 'Melaporkan perundungan kepada guru atau nakes UKS adalah tindakan penyelamatan yang tepat.', answer: true, explanation: 'Benar. Melapor adalah langkah penyelamatan hak dan pemulihan madrasah.' },
+    ],
+  },
+  {
+    pageNumber: 30,
+    subBab: 'SUB-BAB 06',
+    subBabTitle: 'Evaluasi & Komitmen',
+    type: 'pledge_ceremony',
+    title: 'IKRAR KOMITMEN SISWA MADRASAH',
+    subtitle: 'MTs SA Riyadul Bayan (YAPIRA)',
+    pledges: [
+      '1. Menghargai keberagaman dan perbedaan seluruh teman madrasah.',
+      '2. Menolak keras segala bentuk bullying fisik, verbal, relasional, maupun siber.',
+      '3. Menunjukkan kepedulian nyata (Start Caring) kepada siapapun yang membutuhkan.',
+      '4. Berani bersuara dan melaporkan perundungan kepada guru dan tenaga kesehatan.',
+    ],
+    pledgeButtonText: 'SAYA BERKOMITMEN: STOP BULLYING, START CARING!',
+  },
+];
+

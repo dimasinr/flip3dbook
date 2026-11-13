@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { playPageFlipSound, playClickSound } from '../sound';
-import { ChevronLeft, ChevronRight, BookOpen, Layers } from 'lucide-react';
+import { ChevronLeft, ChevronRight, BookOpen, Home, List } from 'lucide-react';
 
 export default function Cartoon3DBook({
   spreadIndex,
@@ -150,8 +150,16 @@ export default function Cartoon3DBook({
     }
   };
 
-  const currentMobilePageNumber = spreadIndex * 2 + (mobilePageSide === 'left' ? 1 : 2);
-  const totalPages = totalSpreads * 2;
+  // Page numbering logic:
+  // Spread 0: Cover (Sampul) & Table of Contents (Daftar Isi)
+  // Spread 1..15: Pages 1..30
+  const isCoverSpread = spreadIndex === 0;
+  const leftPageNum = isCoverSpread ? 'SAMPUL' : (spreadIndex - 1) * 2 + 1;
+  const rightPageNum = isCoverSpread ? 'DAFTAR ISI' : (spreadIndex - 1) * 2 + 2;
+
+  const currentMobilePageLabel = isCoverSpread
+    ? mobilePageSide === 'left' ? 'Sampul Depan' : 'Daftar Isi'
+    : `Hal ${mobilePageSide === 'left' ? leftPageNum : rightPageNum} / 30`;
 
   return (
     <div
@@ -162,40 +170,49 @@ export default function Cartoon3DBook({
       onMouseUp={handleMouseUp}
     >
       {/* Mobile Page Navigator Header (Visible on screens < 768px) */}
-      <div className="md:hidden w-full max-w-md flex items-center justify-between px-3 py-1.5 mb-2 bg-slate-900/90 backdrop-blur-md rounded-2xl border border-slate-700 shadow-xl z-30">
-        <button
-          onClick={mobilePrev}
-          disabled={spreadIndex === 0 && mobilePageSide === 'left'}
-          className="p-1 rounded-lg bg-slate-800 text-slate-200 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-slate-700 transition"
-          aria-label="Halaman Sebelumnya"
-        >
-          <ChevronLeft size={18} />
-        </button>
+      <div className="md:hidden w-full max-w-md flex items-center justify-between px-3 py-1.5 mb-2 bg-slate-900/95 backdrop-blur-md rounded-2xl border border-slate-700 shadow-xl z-30">
+        <div className="flex items-center gap-1.5">
+          <button
+            onClick={() => { playClickSound(); onSpreadChange(0); setMobilePageSide('left'); }}
+            className="p-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-400"
+            title="Kembali ke Sampul"
+          >
+            <Home size={15} />
+          </button>
+          <button
+            onClick={mobilePrev}
+            disabled={spreadIndex === 0 && mobilePageSide === 'left'}
+            className="p-1 rounded-lg bg-slate-800 text-slate-200 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-slate-700 transition"
+            aria-label="Halaman Sebelumnya"
+          >
+            <ChevronLeft size={16} />
+          </button>
+        </div>
 
-        <div className="flex items-center gap-1.5 text-xs font-black">
+        <div className="flex items-center gap-1 text-xs font-black">
           <button
             onClick={() => { playClickSound(); setMobilePageSide('left'); }}
-            className={`px-2.5 py-1 rounded-xl transition-all ${
+            className={`px-2 py-0.5 rounded-lg transition-all ${
               mobilePageSide === 'left'
-                ? 'bg-amber-400 text-slate-950 shadow font-black scale-105'
+                ? 'bg-amber-400 text-slate-950 shadow font-black'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
-            Hal {spreadIndex * 2 + 1}
+            {isCoverSpread ? 'Sampul' : `Hal ${leftPageNum}`}
           </button>
           <span className="text-slate-600 font-bold">•</span>
           <button
             onClick={() => { playClickSound(); setMobilePageSide('right'); }}
-            className={`px-2.5 py-1 rounded-xl transition-all ${
+            className={`px-2 py-0.5 rounded-lg transition-all ${
               mobilePageSide === 'right'
-                ? 'bg-sky-400 text-slate-950 shadow font-black scale-105'
+                ? 'bg-sky-400 text-slate-950 shadow font-black'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
-            Hal {spreadIndex * 2 + 2}
+            {isCoverSpread ? 'Menu' : `Hal ${rightPageNum}`}
           </button>
-          <span className="text-[10px] text-slate-500 font-bold ml-1">
-            ({currentMobilePageNumber}/{totalPages})
+          <span className="text-[10px] text-slate-400 font-bold ml-1">
+            ({currentMobilePageLabel})
           </span>
         </div>
 
@@ -205,7 +222,7 @@ export default function Cartoon3DBook({
           className="p-1 rounded-lg bg-slate-800 text-slate-200 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-slate-700 transition"
           aria-label="Halaman Selanjutnya"
         >
-          <ChevronRight size={18} />
+          <ChevronRight size={16} />
         </button>
       </div>
 
@@ -215,10 +232,14 @@ export default function Cartoon3DBook({
         {/* Soft Book Cover Base Plate & Leather Shadow */}
         <div className="absolute -inset-2 sm:-inset-3.5 bg-gradient-to-b from-[#1e293b] via-[#0f172a] to-[#020617] rounded-3xl md:rounded-[40px] shadow-[0_20px_50px_-10px_rgba(0,0,0,0.7)] border-2 border-slate-700/50 -z-20 transform -translate-y-1" />
         
-        {/* Golden Silk Bookmark Ribbon (Centered on Desktop) */}
-        <div className="hidden md:flex absolute -top-3.5 left-1/2 -translate-x-1/2 w-6 h-16 bg-gradient-to-b from-rose-600 via-rose-500 to-amber-400 z-30 drop-shadow-lg rounded-b-md items-end justify-center pb-1">
+        {/* Golden Silk Bookmark Ribbon (Clickable to jump to Cover & Menu) */}
+        <button
+          onClick={() => { playClickSound(); onSpreadChange(0); }}
+          className="hidden md:flex absolute -top-3.5 left-1/2 -translate-x-1/2 w-6 h-16 bg-gradient-to-b from-rose-600 via-rose-500 to-amber-400 z-30 drop-shadow-lg rounded-b-md items-end justify-center pb-1 hover:h-18 transition-all cursor-pointer group"
+          title="Klik Pembatas Buku untuk Kembali ke Sampul & Menu"
+        >
           <div className="w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-amber-400" />
-        </div>
+        </button>
 
         {/* ======================================================== */}
         {/* LEFT PAGE (Open Spread Left) */}
@@ -241,16 +262,16 @@ export default function Cartoon3DBook({
               <span className="truncate">STOP BULLYING, START CARING</span>
             </span>
             <span className="bg-amber-100 text-amber-900 px-2 sm:px-3 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black border border-amber-300/80 shadow-xs shrink-0">
-              HALAMAN {spreadIndex * 2 + 1}
+              {isCoverSpread ? 'SAMPUL DEPAN' : `HALAMAN ${leftPageNum}`}
             </span>
           </div>
 
           {/* Left Content Area (With bottom padding for navigation buttons) */}
-          <div className="flex-1 p-3.5 sm:p-5 md:p-7 pb-16 md:pb-8 overflow-y-auto cartoon-scroll relative z-10">
+          <div className="flex-1 p-3 sm:p-5 md:p-6 pb-16 md:pb-8 overflow-y-auto cartoon-scroll relative z-10">
             {leftContent}
           </div>
 
-          {/* Mobile Bottom Navigation Controls (When Left Page is Active on Mobile) */}
+          {/* Mobile Bottom Navigation Controls */}
           <div className="md:hidden absolute bottom-2.5 left-2.5 right-2.5 z-30 flex items-center justify-between pointer-events-none">
             {spreadIndex > 0 ? (
               <button
@@ -259,7 +280,7 @@ export default function Cartoon3DBook({
                 className="pointer-events-auto px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-black text-[11px] shadow-lg border-2 border-slate-700 transition flex items-center gap-1 active:scale-95"
               >
                 <ChevronLeft size={14} />
-                <span>Hal {spreadIndex * 2}</span>
+                <span>Hal {leftPageNum - 1}</span>
               </button>
             ) : <div />}
 
@@ -268,7 +289,7 @@ export default function Cartoon3DBook({
               disabled={isFlipping}
               className="pointer-events-auto px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-[11px] shadow-lg border-2 border-slate-900 transition flex items-center gap-1 active:scale-95 ml-auto"
             >
-              <span>Hal {spreadIndex * 2 + 2}</span>
+              <span>{isCoverSpread ? 'Buka Menu' : `Hal ${rightPageNum}`}</span>
               <ChevronRight size={14} />
             </button>
           </div>
@@ -313,7 +334,7 @@ export default function Cartoon3DBook({
           {/* Right Page Top Header */}
           <div className="px-4 sm:px-6 pt-2.5 sm:pt-3.5 pb-1 flex items-center justify-between text-xs font-black text-slate-400 border-b border-amber-200/50 shrink-0">
             <span className="bg-sky-100 text-sky-900 px-2 sm:px-3 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black border border-sky-300/80 shadow-xs shrink-0">
-              HALAMAN {spreadIndex * 2 + 2}
+              {isCoverSpread ? 'DAFTAR ISI' : `HALAMAN ${rightPageNum}`}
             </span>
             <span className="text-[10px] sm:text-[11px] text-slate-600 font-extrabold truncate ml-2">
               MTs SA Riyadul Bayan
@@ -321,11 +342,11 @@ export default function Cartoon3DBook({
           </div>
 
           {/* Right Content Area (With bottom padding for navigation buttons) */}
-          <div className="flex-1 p-3.5 sm:p-5 md:p-7 pb-16 md:pb-8 overflow-y-auto cartoon-scroll relative z-10">
+          <div className="flex-1 p-3 sm:p-5 md:p-6 pb-16 md:pb-8 overflow-y-auto cartoon-scroll relative z-10">
             {rightContent}
           </div>
 
-          {/* Mobile Bottom Navigation Controls (When Right Page is Active on Mobile) */}
+          {/* Mobile Bottom Navigation Controls */}
           <div className="md:hidden absolute bottom-2.5 left-2.5 right-2.5 z-30 flex items-center justify-between pointer-events-none">
             <button
               onClick={mobilePrev}
@@ -333,7 +354,7 @@ export default function Cartoon3DBook({
               className="pointer-events-auto px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-black text-[11px] shadow-lg border-2 border-slate-700 transition flex items-center gap-1 active:scale-95"
             >
               <ChevronLeft size={14} />
-              <span>Hal {spreadIndex * 2 + 1}</span>
+              <span>{isCoverSpread ? 'Sampul' : `Hal ${leftPageNum}`}</span>
             </button>
 
             {spreadIndex < totalSpreads - 1 ? (
@@ -342,7 +363,7 @@ export default function Cartoon3DBook({
                 disabled={isFlipping}
                 className="pointer-events-auto px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-[11px] shadow-lg border-2 border-slate-900 transition flex items-center gap-1 active:scale-95 ml-auto"
               >
-                <span>Hal {spreadIndex * 2 + 3}</span>
+                <span>{isCoverSpread ? 'Mulai Hal 1' : `Hal ${rightPageNum + 1}`}</span>
                 <ChevronRight size={14} />
               </button>
             ) : <div />}
@@ -356,7 +377,7 @@ export default function Cartoon3DBook({
               className="hidden md:flex absolute bottom-3 right-3 z-30 px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs shadow-md border-2 border-slate-900 transition items-center gap-1 hover:scale-105 active:scale-95"
               title="Buka Halaman Berikutnya"
             >
-              <span>Selanjutnya</span>
+              <span>{isCoverSpread ? 'Mulai Hal 1' : 'Selanjutnya'}</span>
               <ChevronRight size={16} />
             </button>
           )}

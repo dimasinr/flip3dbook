@@ -1,9 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-import { Play, Pause, RotateCcw, Eye, Info, Sparkles, ShieldCheck } from 'lucide-react';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { Play, Pause, RotateCcw, Eye, Info, Sparkles, ShieldCheck, UserCheck } from 'lucide-react';
 import { playClickSound } from '../sound';
 
 export const SCENES_DATA = [
+  {
+    id: 'karakter',
+    title: 'Model 3D Karakter Siswa (360°)',
+    subtitle: 'Karakter Resmi: Siswa MTs SA Riyadul Bayan',
+    description: 'Model 3D resmi siswa sekolah (school_boy.glb). Putar dan periksa detail karakter siswa secara 360° yang merepresentasikan generasi peduli anti-bullying.',
+    moral: '🌟 Siswa yang berkarakter, berakhlak mulia, dan berani menolak segala bentuk perundungan di madrasah.',
+    badge: 'Karakter Utama',
+    badgeColor: 'bg-sky-500',
+    speechBully: 'Siswa MTs SA Riyadul Bayan',
+    speechVictim: 'Saya siap menjadi agen perubahan anti-bullying!',
+  },
   {
     id: 'fisik',
     title: '1. Simulasi Bullying Fisik',
@@ -77,6 +89,8 @@ export default function Character3DViewer() {
   const [currentSceneIdx, setCurrentSceneIdx] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [speed, setSpeed] = useState(1);
+  const [loadingProgress, setLoadingProgress] = useState(0);
+  const [isModelLoaded, setIsModelLoaded] = useState(false);
 
   const sceneStateRef = useRef({
     sceneIdx: 0,
@@ -104,8 +118,8 @@ export default function Character3DViewer() {
     scene.fog = new THREE.FogExp2(0xf1f5f9, 0.035);
 
     const camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 80);
-    camera.position.set(0, 3.0, 7.2);
-    camera.lookAt(0, 1.25, 0);
+    camera.position.set(0, 2.5, 6.5);
+    camera.lookAt(0, 1.1, 0);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' });
     renderer.setSize(width, height);
@@ -113,19 +127,19 @@ export default function Character3DViewer() {
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.15;
+    renderer.toneMappingExposure = 1.2;
     container.appendChild(renderer.domElement);
 
     // Smooth Studio Lighting Setup
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
     scene.add(ambientLight);
 
-    const hemiLight = new THREE.HemisphereLight(0xfffbeb, 0xe2e8f0, 0.5);
+    const hemiLight = new THREE.HemisphereLight(0xfffbeb, 0xe2e8f0, 0.6);
     hemiLight.position.set(0, 10, 0);
     scene.add(hemiLight);
 
     // Warm Key Light
-    const dirLight = new THREE.DirectionalLight(0xfff7ed, 1.1);
+    const dirLight = new THREE.DirectionalLight(0xfff7ed, 1.2);
     dirLight.position.set(5, 9, 6);
     dirLight.castShadow = true;
     dirLight.shadow.mapSize.width = 2048;
@@ -140,7 +154,7 @@ export default function Character3DViewer() {
     scene.add(dirLight);
 
     // Cool Rim Light for crisp character silhouette separation
-    const rimLight = new THREE.DirectionalLight(0x38bdf8, 0.65);
+    const rimLight = new THREE.DirectionalLight(0x38bdf8, 0.7);
     rimLight.position.set(-6, 4, -4);
     scene.add(rimLight);
 
@@ -164,7 +178,7 @@ export default function Character3DViewer() {
     wall.receiveShadow = true;
     scene.add(wall);
 
-    // Whiteboard Frame
+    // Whiteboard Frame with Anti-Bullying Banner
     const boardGeo = new THREE.BoxGeometry(6.4, 2.4, 0.08);
     const boardMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.2, metalness: 0.1 });
     const board = new THREE.Mesh(boardGeo, boardMat);
@@ -180,7 +194,7 @@ export default function Character3DViewer() {
     scene.add(frame);
 
     // -------------------------------------------------------------
-    // Helper: Create Smooth Stylized 3D Humanoid Character
+    // Helper: Create Stylized Procedural Character (for supporting roles)
     // -------------------------------------------------------------
     function createSmoothCharacter({
       shirtColor = 0x1e3a8a,
@@ -200,7 +214,6 @@ export default function Character3DViewer() {
       const shoesMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.8 });
       const hairMat = new THREE.MeshStandardMaterial({ color: hairColor, roughness: 0.7 });
 
-      // Pelvis
       const pelvis = new THREE.Group();
       pelvis.position.y = 1.08;
       charRoot.add(pelvis);
@@ -209,7 +222,6 @@ export default function Character3DViewer() {
       hipsMesh.castShadow = true;
       pelvis.add(hipsMesh);
 
-      // Spine & Torso (Curved smooth capsule-like torso)
       const spine = new THREE.Group();
       spine.position.y = 0.14;
       pelvis.add(spine);
@@ -219,30 +231,19 @@ export default function Character3DViewer() {
       torsoMesh.castShadow = true;
       spine.add(torsoMesh);
 
-      // School Tie or Uniform Collar
       if (!isTeacher) {
-        const tieGeo = new THREE.BoxGeometry(0.08, 0.34, 0.04);
-        const tieMat = new THREE.MeshStandardMaterial({ color: 0x0284c7 });
-        const tie = new THREE.Mesh(tieGeo, tieMat);
+        const tie = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.34, 0.04), new THREE.MeshStandardMaterial({ color: 0x0284c7 }));
         tie.position.set(0, 0.26, 0.27);
         spine.add(tie);
       } else {
-        const idBadge = new THREE.Mesh(
-          new THREE.BoxGeometry(0.12, 0.16, 0.02),
-          new THREE.MeshStandardMaterial({ color: 0x10b981 })
-        );
+        const idBadge = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.16, 0.02), new THREE.MeshStandardMaterial({ color: 0x10b981 }));
         idBadge.position.set(0.12, 0.26, 0.28);
         spine.add(idBadge);
       }
 
-      // Neck & Head
       const neck = new THREE.Group();
       neck.position.y = 0.52;
       spine.add(neck);
-
-      const neckMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.1, 0.12, 14), skinMat);
-      neckMesh.position.y = 0.06;
-      neck.add(neckMesh);
 
       const head = new THREE.Group();
       head.position.y = 0.2;
@@ -254,7 +255,6 @@ export default function Character3DViewer() {
       headMesh.castShadow = true;
       head.add(headMesh);
 
-      // Hair or Hijab
       if (hasHijab) {
         const hijabMesh = new THREE.Mesh(
           new THREE.SphereGeometry(0.3, 24, 24),
@@ -272,135 +272,51 @@ export default function Character3DViewer() {
         head.add(hairMesh);
       }
 
-      // Expressive Cartoon Eyes
-      const eyeWhiteMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-      const eyePupilMat = new THREE.MeshBasicMaterial({ color: 0x0f172a });
-
-      const createEye = (x) => {
-        const eyeGroup = new THREE.Group();
-        eyeGroup.position.set(x, 0.18, 0.23);
-
-        const white = new THREE.Mesh(new THREE.SphereGeometry(0.042, 12, 12), eyeWhiteMat);
-        white.scale.set(1, 1.2, 0.5);
-        eyeGroup.add(white);
-
-        const pupil = new THREE.Mesh(new THREE.SphereGeometry(0.024, 10, 10), eyePupilMat);
-        pupil.position.set(0, 0, 0.022);
-        pupil.scale.set(1, 1, 0.4);
-        eyeGroup.add(pupil);
-
-        return eyeGroup;
-      };
-
-      head.add(createEye(-0.09));
-      head.add(createEye(0.09));
-
-      // Shoulders & Arms (Left)
       const leftShoulder = new THREE.Group();
       leftShoulder.position.set(-0.36, 0.44, 0);
       spine.add(leftShoulder);
-
       const leftUpperArm = new THREE.Mesh(new THREE.CapsuleGeometry(0.065, 0.24, 8, 12), shirtMat);
       leftUpperArm.position.y = -0.14;
       leftUpperArm.castShadow = true;
       leftShoulder.add(leftUpperArm);
 
-      const leftElbow = new THREE.Group();
-      leftElbow.position.y = -0.28;
-      leftShoulder.add(leftElbow);
-
-      const leftForearm = new THREE.Mesh(new THREE.CapsuleGeometry(0.055, 0.22, 8, 12), skinMat);
-      leftForearm.position.y = -0.13;
-      leftForearm.castShadow = true;
-      leftElbow.add(leftForearm);
-
-      // Shoulders & Arms (Right)
       const rightShoulder = new THREE.Group();
       rightShoulder.position.set(0.36, 0.44, 0);
       spine.add(rightShoulder);
-
       const rightUpperArm = new THREE.Mesh(new THREE.CapsuleGeometry(0.065, 0.24, 8, 12), shirtMat);
       rightUpperArm.position.y = -0.14;
       rightUpperArm.castShadow = true;
       rightShoulder.add(rightUpperArm);
 
-      const rightElbow = new THREE.Group();
-      rightElbow.position.y = -0.28;
-      rightShoulder.add(rightElbow);
-
-      const rightForearm = new THREE.Mesh(new THREE.CapsuleGeometry(0.055, 0.22, 8, 12), skinMat);
-      rightForearm.position.y = -0.13;
-      rightForearm.castShadow = true;
-      rightElbow.add(rightForearm);
-
-      // Legs (Left)
       const leftHip = new THREE.Group();
       leftHip.position.set(-0.13, -0.1, 0);
       pelvis.add(leftHip);
+      const leftLeg = new THREE.Mesh(new THREE.CapsuleGeometry(0.08, 0.76, 8, 12), pantsMat);
+      leftLeg.position.y = -0.42;
+      leftLeg.castShadow = true;
+      leftHip.add(leftLeg);
 
-      const leftThigh = new THREE.Mesh(new THREE.CapsuleGeometry(0.08, 0.38, 8, 12), pantsMat);
-      leftThigh.position.y = -0.24;
-      leftThigh.castShadow = true;
-      leftHip.add(leftThigh);
-
-      const leftKnee = new THREE.Group();
-      leftKnee.position.y = -0.44;
-      leftHip.add(leftKnee);
-
-      const leftShin = new THREE.Mesh(new THREE.CapsuleGeometry(0.07, 0.38, 8, 12), pantsMat);
-      leftShin.position.y = -0.22;
-      leftShin.castShadow = true;
-      leftKnee.add(leftShin);
-
-      const leftFoot = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.09, 0.22), shoesMat);
-      leftFoot.position.set(0, -0.46, 0.05);
-      leftFoot.castShadow = true;
-      leftKnee.add(leftFoot);
-
-      // Legs (Right)
       const rightHip = new THREE.Group();
       rightHip.position.set(0.13, -0.1, 0);
       pelvis.add(rightHip);
-
-      const rightThigh = new THREE.Mesh(new THREE.CapsuleGeometry(0.08, 0.38, 8, 12), pantsMat);
-      rightThigh.position.y = -0.24;
-      rightThigh.castShadow = true;
-      rightHip.add(rightThigh);
-
-      const rightKnee = new THREE.Group();
-      rightKnee.position.y = -0.44;
-      rightHip.add(rightKnee);
-
-      const rightShin = new THREE.Mesh(new THREE.CapsuleGeometry(0.07, 0.38, 8, 12), pantsMat);
-      rightShin.position.y = -0.22;
-      rightShin.castShadow = true;
-      rightKnee.add(rightShin);
-
-      const rightFoot = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.09, 0.22), shoesMat);
-      rightFoot.position.set(0, -0.46, 0.05);
-      rightFoot.castShadow = true;
-      rightKnee.add(rightFoot);
+      const rightLeg = new THREE.Mesh(new THREE.CapsuleGeometry(0.08, 0.76, 8, 12), pantsMat);
+      rightLeg.position.y = -0.42;
+      rightLeg.castShadow = true;
+      rightHip.add(rightLeg);
 
       return {
         root: charRoot,
         pelvis,
         spine,
-        neck,
         head,
         leftShoulder,
-        leftElbow,
         rightShoulder,
-        rightElbow,
-        leftHip,
-        leftKnee,
-        rightHip,
-        rightKnee,
       };
     }
 
-    // 1. Bully (Pelaku) - Dark Blue uniform
+    // Bully (Pelaku) supporting character
     const bully = createSmoothCharacter({
-      shirtColor: 0x1e3a8a,
+      shirtColor: 0x991b1b,
       pantsColor: 0x1e293b,
       skinColor: 0xfbbf24,
       hairColor: 0x18181b,
@@ -408,17 +324,7 @@ export default function Character3DViewer() {
     });
     scene.add(bully.root);
 
-    // 2. Victim (Korban) - Sky Blue uniform
-    const victim = createSmoothCharacter({
-      shirtColor: 0x0284c7,
-      pantsColor: 0x334155,
-      skinColor: 0xffedd5,
-      hairColor: 0x475569,
-      roleName: 'Korban',
-    });
-    scene.add(victim.root);
-
-    // 3. Bystander (Saksi / Upstander) - Madrasah Hijab & Green Attire
+    // Bystander / Upstander (Saksi) supporting character
     const bystander = createSmoothCharacter({
       shirtColor: 0x10b981,
       pantsColor: 0x064e3b,
@@ -429,7 +335,7 @@ export default function Character3DViewer() {
     });
     scene.add(bystander.root);
 
-    // 4. Teacher (Guru BK) - Warm Brown Batik Formal
+    // Teacher (Guru BK) supporting character
     const teacher = createSmoothCharacter({
       shirtColor: 0x92400e,
       pantsColor: 0x18181b,
@@ -440,33 +346,76 @@ export default function Character3DViewer() {
     });
     scene.add(teacher.root);
 
-    // Reset characters
-    function resetAll() {
-      [bully, victim, bystander, teacher].forEach((ch) => {
-        ch.root.position.set(0, 0, 0);
-        ch.root.rotation.set(0, 0, 0);
-        ch.pelvis.position.set(0, 1.08, 0);
-        ch.pelvis.rotation.set(0, 0, 0);
-        ch.spine.rotation.set(0, 0, 0);
-        ch.head.rotation.set(0, 0, 0);
-        ch.leftShoulder.rotation.set(0, 0, 0.15);
-        ch.leftElbow.rotation.set(0, 0, 0);
-        ch.rightShoulder.rotation.set(0, 0, -0.15);
-        ch.rightElbow.rotation.set(0, 0, 0);
-        ch.leftHip.rotation.set(0, 0, 0);
-        ch.leftKnee.rotation.set(0, 0, 0);
-        ch.rightHip.rotation.set(0, 0, 0);
-        ch.rightKnee.rotation.set(0, 0, 0);
-        ch.root.visible = false;
-      });
-    }
+    // Holographic Energy Shield for Upstander
+    const shieldGeo = new THREE.CylinderGeometry(0.8, 0.8, 1.8, 32, 1, true);
+    const shieldMat = new THREE.MeshStandardMaterial({
+      color: 0x10b981,
+      transparent: true,
+      opacity: 0.45,
+      roughness: 0.2,
+      side: THREE.DoubleSide,
+    });
+    const energyShield = new THREE.Mesh(shieldGeo, shieldMat);
+    energyShield.position.set(0.3, 1.0, 0.3);
+    energyShield.visible = false;
+    scene.add(energyShield);
+
+    // -------------------------------------------------------------
+    // Load school_boy.glb 3D Model
+    // -------------------------------------------------------------
+    const schoolBoyGroup = new THREE.Group();
+    schoolBoyGroup.name = 'SchoolBoyRoot';
+    scene.add(schoolBoyGroup);
+
+    let isGltfReady = false;
+    const loader = new GLTFLoader();
+    const modelPath = (import.meta.env.BASE_URL || '/') + 'model/school_boy.glb';
+
+    loader.load(
+      modelPath,
+      (gltf) => {
+        const loadedModel = gltf.scene;
+        loadedModel.traverse((child) => {
+          if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+            if (child.material) {
+              child.material.roughness = 0.6;
+              child.material.metalness = 0.1;
+              if (child.material.map) {
+                child.material.map.colorSpace = THREE.SRGBColorSpace;
+              }
+            }
+          }
+        });
+
+        // The model height is 1.0 unit. Scale to 2.2 units tall with feet on floor (y=0)
+        loadedModel.scale.set(2.2, 2.2, 2.2);
+        loadedModel.position.set(0, 0, 0);
+
+        schoolBoyGroup.add(loadedModel);
+        isGltfReady = true;
+        setIsModelLoaded(true);
+      },
+      (xhr) => {
+        if (xhr.total > 0) {
+          const pct = Math.round((xhr.loaded / xhr.total) * 100);
+          setLoadingProgress(pct);
+        }
+      },
+      (error) => {
+        console.error('Error loading school_boy.glb:', error);
+        // Fallback: still show experience even if asset load fails
+        setIsModelLoaded(true);
+      }
+    );
 
     // Interactive Orbit Drag
     let isDragging = false;
     let prevMouseX = 0;
     let prevMouseY = 0;
     let cameraOrbitAngle = 0;
-    let cameraOrbitPitch = 0.32;
+    let cameraOrbitPitch = 0.35;
 
     const onMouseDown = (e) => {
       isDragging = true;
@@ -512,6 +461,26 @@ export default function Character3DViewer() {
     let animationFrameId;
     let clock = new THREE.Clock();
 
+    function resetSupportingCharacters() {
+      [bully, bystander, teacher].forEach((ch) => {
+        ch.root.position.set(0, 0, 0);
+        ch.root.rotation.set(0, 0, 0);
+        ch.pelvis.position.set(0, 1.08, 0);
+        ch.pelvis.rotation.set(0, 0, 0);
+        ch.spine.rotation.set(0, 0, 0);
+        ch.head.rotation.set(0, 0, 0);
+        ch.leftShoulder.rotation.set(0, 0, 0.15);
+        ch.rightShoulder.rotation.set(0, 0, -0.15);
+        ch.root.visible = false;
+      });
+      energyShield.visible = false;
+
+      // Reset school boy model transform
+      schoolBoyGroup.position.set(0, 0, 0);
+      schoolBoyGroup.rotation.set(0, 0, 0);
+      schoolBoyGroup.visible = true;
+    }
+
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
 
@@ -525,141 +494,122 @@ export default function Character3DViewer() {
       const t = state.animTime;
       const sceneIdx = state.sceneIdx;
 
-      // Smooth Camera Position
-      const dist = 7.2;
+      // Smooth Camera Position with Orbit
+      const dist = 6.8;
       camera.position.x = Math.sin(cameraOrbitAngle) * Math.cos(cameraOrbitPitch) * dist;
-      camera.position.y = Math.sin(cameraOrbitPitch) * dist + 1.25;
+      camera.position.y = Math.sin(cameraOrbitPitch) * dist + 1.15;
       camera.position.z = Math.cos(cameraOrbitAngle) * Math.cos(cameraOrbitPitch) * dist;
-      camera.lookAt(0, 1.25, 0);
+      camera.lookAt(0, 1.15, 0);
 
-      resetAll();
+      resetSupportingCharacters();
 
       // ==========================================
-      // Scene 0: Bullying Fisik (Smooth Push & Stumble)
+      // Scene 0: 360° Showcase of school_boy.glb
       // ==========================================
       if (sceneIdx === 0) {
+        schoolBoyGroup.position.set(0, Math.sin(t * 2.5) * 0.03, 0);
+        schoolBoyGroup.rotation.y = t * 0.6; // Gentle continuous showcase spin
+      }
+
+      // ==========================================
+      // Scene 1: Bullying Fisik (Push & Recoil)
+      // ==========================================
+      else if (sceneIdx === 1) {
         bully.root.visible = true;
-        victim.root.visible = true;
 
         const cycle = t % 4.2;
-        bully.root.position.set(-1.25, 0, 0);
-        bully.root.rotation.y = Math.PI / 2.1;
+        bully.root.position.set(-1.3, 0, 0);
+        bully.root.rotation.y = Math.PI / 2.2;
 
-        victim.root.position.set(1.0, 0, 0);
-        victim.root.rotation.y = -Math.PI / 2.1;
+        schoolBoyGroup.position.set(1.0, 0, 0);
+        schoolBoyGroup.rotation.y = -Math.PI / 2.2;
 
         if (cycle < 1.6) {
           const step = Math.sin((cycle / 1.6) * (Math.PI / 2));
-          bully.root.position.x = -1.5 + step * 0.55;
-          bully.rightShoulder.rotation.x = step * 1.1;
-          bully.leftShoulder.rotation.x = step * 1.0;
+          bully.root.position.x = -1.6 + step * 0.6;
+          bully.rightShoulder.rotation.x = step * 1.2;
+          bully.leftShoulder.rotation.x = step * 1.1;
         } else if (cycle < 2.8) {
           const pushProg = (cycle - 1.6) / 1.2;
-          const recoil = Math.sin(pushProg * Math.PI) * 0.6;
-          victim.root.position.x = 1.0 + recoil;
-          victim.spine.rotation.z = -recoil * 0.5;
-          victim.head.rotation.z = -recoil * 0.4;
-          victim.leftShoulder.rotation.z = 0.8;
-          victim.rightShoulder.rotation.z = -0.8;
+          const recoil = Math.sin(pushProg * Math.PI) * 0.65;
+          schoolBoyGroup.position.x = 1.0 + recoil;
+          schoolBoyGroup.rotation.z = -recoil * 0.45;
+          schoolBoyGroup.rotation.x = -recoil * 0.2;
 
           bully.rightShoulder.rotation.x = 1.2;
           bully.leftShoulder.rotation.x = 1.1;
         } else {
-          victim.root.position.x = 1.3;
-          victim.head.rotation.x = 0.35; // Head down sad
-          victim.spine.rotation.x = 0.15;
-
-          bully.leftShoulder.rotation.x = 0.5;
-          bully.rightShoulder.rotation.x = 0.5;
+          schoolBoyGroup.position.x = 1.35;
+          schoolBoyGroup.rotation.x = 0.22; // Head down sad
+          schoolBoyGroup.position.y = Math.sin(t * 12) * 0.015; // Shivering
         }
       }
 
       // ==========================================
-      // Scene 1: Bullying Verbal (Smooth Point & Mock)
-      // ==========================================
-      else if (sceneIdx === 1) {
-        bully.root.visible = true;
-        victim.root.visible = true;
-
-        const cycle = t % 3.2;
-        bully.root.position.set(-1.2, 0, 0);
-        bully.root.rotation.y = Math.PI / 2.3;
-
-        victim.root.position.set(1.2, 0, 0);
-        victim.root.rotation.y = -Math.PI / 2.4;
-
-        // Bully smooth laughing bounce
-        bully.rightShoulder.rotation.x = 1.4 + Math.sin(cycle * 4) * 0.08;
-        bully.head.rotation.y = Math.sin(cycle * 3) * 0.12;
-        bully.spine.rotation.x = Math.sin(cycle * 6) * 0.08;
-
-        // Victim shrink and cower
-        victim.head.rotation.x = 0.38;
-        victim.leftShoulder.rotation.z = 1.1;
-        victim.rightShoulder.rotation.z = -1.1;
-        victim.spine.rotation.x = 0.22;
-      }
-
-      // ==========================================
-      // Scene 2: Bullying Sosial (Smooth Ostracization)
+      // Scene 2: Bullying Verbal (Mock & Cower)
       // ==========================================
       else if (sceneIdx === 2) {
         bully.root.visible = true;
-        bystander.root.visible = true;
-        victim.root.visible = true;
 
-        bully.root.position.set(-0.6, 0, -0.3);
+        const cycle = t % 3.2;
+        bully.root.position.set(-1.25, 0, 0);
+        bully.root.rotation.y = Math.PI / 2.4;
+
+        schoolBoyGroup.position.set(1.2, 0, 0);
+        schoolBoyGroup.rotation.y = -Math.PI / 2.4;
+        schoolBoyGroup.rotation.x = 0.25; // Drooping head
+        schoolBoyGroup.position.y = Math.sin(t * 15) * 0.01; // Trembling
+
+        bully.rightShoulder.rotation.x = 1.4 + Math.sin(cycle * 4) * 0.1;
+        bully.head.rotation.y = Math.sin(cycle * 3) * 0.15;
+        bully.spine.rotation.x = Math.sin(cycle * 6) * 0.08;
+      }
+
+      // ==========================================
+      // Scene 3: Bullying Sosial (Ostracization)
+      // ==========================================
+      else if (sceneIdx === 3) {
+        bully.root.visible = true;
+        bystander.root.visible = true;
+
+        bully.root.position.set(-0.7, 0, -0.3);
         bully.root.rotation.y = Math.PI / 4;
 
-        bystander.root.position.set(0.4, 0, -0.3);
+        bystander.root.position.set(0.35, 0, -0.3);
         bystander.root.rotation.y = -Math.PI / 4;
 
         bully.head.rotation.y = 0.35 + Math.sin(t * 2) * 0.06;
         bystander.head.rotation.y = -0.35;
 
-        victim.root.position.set(1.7, 0, 0.7);
-        victim.root.rotation.y = -Math.PI / 1.9;
-
-        const cycle = t % 4.0;
-        if (cycle < 2.0) {
-          victim.leftShoulder.rotation.x = 1.1;
-          victim.head.rotation.x = -0.1;
-        } else {
-          victim.leftShoulder.rotation.x = 0.1;
-          victim.head.rotation.x = 0.42;
-          victim.spine.rotation.x = 0.2;
-        }
+        // School boy excluded standing apart
+        schoolBoyGroup.position.set(1.8, 0, 0.7);
+        schoolBoyGroup.rotation.y = -Math.PI / 1.9;
+        schoolBoyGroup.rotation.x = 0.22;
       }
 
       // ==========================================
-      // Scene 3: Cyberbullying (Smartphone Message)
-      // ==========================================
-      else if (sceneIdx === 3) {
-        bully.root.visible = true;
-        victim.root.visible = true;
-
-        bully.root.position.set(-1.3, 0, 0.2);
-        bully.root.rotation.y = Math.PI / 3;
-
-        bully.rightShoulder.rotation.x = 0.85;
-        bully.leftShoulder.rotation.x = 0.85;
-        bully.rightElbow.rotation.y = -0.7;
-        bully.leftElbow.rotation.y = 0.7;
-        bully.head.rotation.x = 0.35;
-
-        victim.root.position.set(1.3, 0, 0);
-        victim.root.rotation.y = -Math.PI / 3;
-        victim.head.rotation.x = 0.25 + Math.sin(t * 2) * 0.05;
-        victim.spine.rotation.x = 0.15;
-      }
-
-      // ==========================================
-      // Scene 4: Pencegahan (Upstander Courageous Stand)
+      // Scene 4: Cyberbullying (Phone Harassment)
       // ==========================================
       else if (sceneIdx === 4) {
         bully.root.visible = true;
-        victim.root.visible = true;
+
+        bully.root.position.set(-1.3, 0, 0.2);
+        bully.root.rotation.y = Math.PI / 3;
+        bully.rightShoulder.rotation.x = 0.85;
+        bully.leftShoulder.rotation.x = 0.85;
+
+        schoolBoyGroup.position.set(1.3, 0, 0);
+        schoolBoyGroup.rotation.y = -Math.PI / 3;
+        schoolBoyGroup.rotation.x = 0.28 + Math.sin(t * 2) * 0.04; // Looking down at phone
+      }
+
+      // ==========================================
+      // Scene 5: Pencegahan (Upstander Shield)
+      // ==========================================
+      else if (sceneIdx === 5) {
+        bully.root.visible = true;
         bystander.root.visible = true;
+        energyShield.visible = true;
 
         bully.root.position.set(-1.8, 0, 0);
         bully.root.rotation.y = Math.PI / 2;
@@ -668,32 +618,33 @@ export default function Character3DViewer() {
         bystander.root.position.set(-0.35, 0, 0.3);
         bystander.root.rotation.y = Math.PI / 2.2;
         bystander.leftShoulder.rotation.x = 1.45; // Palm up STOP
-        bystander.leftShoulder.rotation.z = 0.15;
-        bystander.rightShoulder.rotation.x = 0.45;
-        bystander.rightShoulder.rotation.z = -0.45;
 
-        victim.root.position.set(1.2, 0, 0.2);
-        victim.root.rotation.y = -Math.PI / 2;
-        victim.head.rotation.x = 0.0;
+        // Holographic shield pulse
+        energyShield.position.set(0.2, 1.0, 0.2);
+        energyShield.scale.setScalar(1 + Math.sin(t * 4) * 0.04);
+
+        // School boy safe behind the shield
+        schoolBoyGroup.position.set(1.35, 0, 0.2);
+        schoolBoyGroup.rotation.y = -Math.PI / 2.2;
+        schoolBoyGroup.rotation.x = 0; // Standing tall and relieved
       }
 
       // ==========================================
-      // Scene 5: Penanganan (Lapor Guru BK)
+      // Scene 6: Penanganan (Lapor Guru BK)
       // ==========================================
-      else if (sceneIdx === 5) {
+      else if (sceneIdx === 6) {
         teacher.root.visible = true;
-        victim.root.visible = true;
         bystander.root.visible = true;
 
         teacher.root.position.set(1.4, 0, 0);
         teacher.root.rotation.y = -Math.PI / 2.2;
-        teacher.head.rotation.x = Math.sin(t * 1.8) * 0.06 + 0.08; // empathetic nod
+        teacher.head.rotation.x = Math.sin(t * 1.8) * 0.06 + 0.08; // Empathetic nod
 
-        victim.root.position.set(-0.9, 0, 0.3);
-        victim.root.rotation.y = Math.PI / 2.5;
+        schoolBoyGroup.position.set(-0.85, 0, 0.2);
+        schoolBoyGroup.rotation.y = Math.PI / 2.4;
 
-        bystander.root.position.set(-1.7, 0, 0.2);
-        bystander.root.rotation.y = Math.PI / 2.8;
+        bystander.root.position.set(-1.7, 0, 0.15);
+        bystander.root.rotation.y = Math.PI / 2.6;
       }
 
       renderer.render(scene, camera);
@@ -760,7 +711,8 @@ export default function Character3DViewer() {
                 : 'bg-slate-800/80 text-slate-300 border-slate-700 hover:bg-slate-700'
             }`}
           >
-            <span>{sc.id.toUpperCase()}</span>
+            {idx === 0 && <UserCheck size={12} />}
+            <span>{idx === 0 ? 'SISWA 3D' : sc.id.toUpperCase()}</span>
           </button>
         ))}
       </div>
@@ -768,6 +720,17 @@ export default function Character3DViewer() {
       {/* 3D Canvas with High Definition Tone Mapping */}
       <div className="relative flex-1 min-h-[200px] sm:min-h-[260px] md:min-h-[290px] w-full bg-slate-100 overflow-hidden group">
         <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
+
+        {/* Loading Spinner for school_boy.glb */}
+        {!isModelLoaded && (
+          <div className="absolute inset-0 bg-slate-900/75 backdrop-blur-sm flex flex-col items-center justify-center text-white z-20 space-y-2.5">
+            <div className="w-10 h-10 border-4 border-sky-400 border-t-transparent rounded-full animate-spin" />
+            <div className="text-center">
+              <span className="text-xs font-black block">Memuat Karakter 3D (school_boy.glb)</span>
+              <span className="text-[10px] text-sky-300 font-bold">{loadingProgress}% Selesai</span>
+            </div>
+          </div>
+        )}
 
         {/* Orbit Hint */}
         <div className="absolute top-2 left-2 bg-slate-950/80 backdrop-blur-md text-white text-[9px] sm:text-[10px] font-bold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full flex items-center gap-1 pointer-events-none shadow">
